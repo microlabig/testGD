@@ -1,18 +1,32 @@
-# phone-app
+# Тестовое задание от Grid Dynamics
 
 > A Vue.js project
 
 ## Build Setup
 
-``` bash
-# install dependencies
-npm install
+При помощи npm:
 
-# serve with hot reload at localhost:8080
+``` bash
+# установить зависимости
+npm i
+
+# запуск сервера в режиме dev (разработки), сервер расположен по адресу localhost:8080
 npm run dev
 
-# build for production with minification
+# для компиляции сервера на продакшн
 npm run build
 ```
 
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+Либо при помощи yarn:
+
+``` bash
+# установить зависимости
+yarn install
+
+# запуск сервера в режиме dev (разработки), сервер расположен по адресу localhost:8080
+yarn dev
+
+# для компиляции сервера на продакшн
+yarn build
+```
+Для просмотра итогового проекта перейдите по ссылке [http://testGD.igorbezmestin.ru](http://testGD.igorbezmestin.ru).

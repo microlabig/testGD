@@ -2,7 +2,7 @@
   h1.beach Hello world!
 </template>
 
-<script>
+<script >
 export default {
   name: 'app',
   data () {
@@ -13,6 +13,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-  @import "/styles/main.scss"
-</style>
+
