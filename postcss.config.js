@@ -11,13 +11,11 @@ module.exports = {
       browsers: ["last 2 versions"],
       cascade: false
     }),
-/*
     require("postcss-advanced-variables")({
       variables: JSON.parse(
         fs.readFileSync("./src/styles/variables.json", "utf-8")
       )
     }),
-*/
     require("postcss-nested"),
     require("postcss-rgb"),
     require("postcss-inline-svg")({

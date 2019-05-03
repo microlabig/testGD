@@ -2,7 +2,7 @@
 
 > A Vue.js project
 
-## Build Setup
+## Запуск проекта
 
 При помощи npm:
 

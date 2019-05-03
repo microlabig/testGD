@@ -1,0 +1,26 @@
+.search {
+    display: flex;
+    border: 3px solid $text-color;
+    border-radius: 30px;
+    overflow: hidden;
+    margin-bottom: 3%;
+
+    &:before {
+        content: "";
+        display: block;
+        width: 30px;
+        height: 30px;
+        background: svg-load('search.svg', fill=$text-color, width=20px, height=20px) no-repeat center center;
+    }
+}
+
+.search__input {
+    outline: none;
+    border: none;
+    width: 100%;
+    font-size: 18px;
+
+    /* &::placeholder {
+        font-weight: $bold;
+    } */
+}
