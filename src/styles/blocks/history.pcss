@@ -1,0 +1,41 @@
+.history {
+
+    & .contacts__table {
+        height: 93%;
+    }
+
+    .contacts__row {
+        display: grid;
+        grid-template-columns: 1fr 4fr 2fr;
+    }
+
+}
+
+.contacts__hamburger {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.contacts__hamburger-icon {
+    position: absolute;
+    left: 50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+}
+
+.contacts__hamburger-line {
+    width: 25px;
+    border: 2px solid $text-color;
+    border-radius: 10px;    
+    margin-bottom: 3px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.contacts__date {
+    text-align: right;
+    font-weight: $bold;
+}
