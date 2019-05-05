@@ -1,0 +1,106 @@
+.form__wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.form__element {    
+    width: 100%;
+    border: 3px solid $text-color;
+    margin-bottom: 20px; //5%
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.form__avatar {  
+    position: relative;      
+    height: 200px;
+    overflow: hidden;
+    
+    &:before {
+        content: "";
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-color: $avatar-bg-color;
+    }
+}
+
+.form__avatar-img {
+    position: relative;
+        
+    margin: 0 auto;
+
+    max-height: 80%;
+    max-width: 60%;
+
+    top: 100%;
+    transform: translateY(-100%);
+
+    object-fit: cover;
+
+    border-top: 3px solid $text-color;
+    border-left: 3px solid $text-color;
+    border-right: 3px solid $text-color;
+}
+
+.form__input{
+    width: 100%;
+    border: none;    
+
+    font-weight: $bold;
+}
+
+//--------button---------
+
+.form__controll {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    //margin-bottom: 20px;
+}
+
+.form__element--button {
+    border: none;
+
+    margin-bottom: 0;
+    width: initial;
+    
+    &.back {
+        width: 20px;
+        height: 20px;
+
+        &:before {
+            content: "";
+            
+            width: 100%;
+            height: 100%;
+
+            display: block;            
+            background: svg-load('left-arrow.svg', fill=$text-color, width=20px, height=20px) no-repeat center center;       
+        }
+    }
+
+    &.save {
+        width: 40px;
+        height: 40px;
+
+        &:before {
+            content: "";
+            
+            width: 100%;
+            height: 100%;
+
+            display: block;            
+            background: svg-load('save.svg', fill=$text-color, width=35px, height=35px) no-repeat center center;
+        }
+    }
+}
+
+.form__button {
+    background-color: transparent;
+}

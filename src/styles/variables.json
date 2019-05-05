@@ -1,5 +1,9 @@
 {
     "text-color": "#414c63",
+    "keypad-color": "dodgerblue",
+    "phone-color": "darkorchid",
+    "avatar-bg-color": "gray",
+
     
     "light": 300,
     "regular": 400,
