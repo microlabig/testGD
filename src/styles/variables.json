@@ -1,9 +1,12 @@
 {
     "text-color": "#414c63",
-    "keypad-color": "dodgerblue",
+    "controll-color": "dodgerblue",
     "phone-color": "darkorchid",
     "avatar-bg-color": "gray",
     "numpad-bg-color": "lightgray",
+    "phone-big-color": "green",
+    "phone-big-call-color": "#802626",
+    "phone-big-disable-color": "gray",
 
     
     "light": 300,

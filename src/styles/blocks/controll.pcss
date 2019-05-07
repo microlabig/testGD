@@ -1,4 +1,4 @@
-.controll {
+/* .controll {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -41,5 +41,181 @@
         width: 60px;
         height: 60px;
         background: svg-load('save.svg', fill=$text-color, width=30px, height=30px) no-repeat center center;
+    }
+} */
+
+.controll {
+    cursor: pointer;
+    position: fixed;
+
+    bottom: 30px;
+    right: 25px;
+}
+
+.controll__tooltip {
+    position: relative;
+
+    visibility: hidden;
+    opacity: 0;
+    top: -9999px;
+    width: 0;
+}
+
+.controll__text {
+    text-align: center;
+    font-size: 18px;
+    font-weight: $bold;
+
+    width: 100%;
+    padding: 10px 60px 20px;
+
+    border: 3px solid $text-color;
+    border-radius: 10px;
+
+    background-color: white;
+}
+
+.controll__buttonbox {
+    width: 80px;
+    height: 80px;
+
+    border-radius: 50%;
+    border: 3px solid $text-color;
+
+    overflow: hidden;
+}
+
+.controll__btn {
+    background-color: rgba($controll-color, .5);
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    &:before {
+        content: "";
+        position: absolute;
+
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+        display: block;
+        width: 60px;
+        height: 60px;
+        background: svg-load('keypad.svg', fill=$text-color, width=50px, height=50px) no-repeat center center;
+    }
+}
+
+//-----------phone---------
+.controll--phone {
+    bottom: 30px;
+    right: auto;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    & .controll__buttonbox {
+
+        width: 70px;
+        height: 70px;
+        margin: 0 auto;
+
+        & .controll__btn {
+            background-color: rgba($phone-color, .5);
+
+            &:before {
+                content: "";
+                position: absolute;
+
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+
+                display: block;
+                width: 50px;
+                height: 50px;
+                background: svg-load('call.svg', fill=black, width=40px, height=40px) no-repeat center center;
+            }
+        }
+    }
+}
+
+//----------phonebig-----------
+.controll--phonebig {
+    bottom: 30px;
+    right: auto;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    & .controll__buttonbox {
+        width: 90px;
+        height: 90px;
+        margin: 0 auto;
+    }
+
+    & .controll__btn {
+        background-color: rgba($phone-big-color, .5);
+
+        &:before {
+            content: "";
+            position: absolute;
+
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+
+            display: block;
+            width: 70px;
+            height: 70px;
+            background: svg-load('call.svg', fill=white, width=55px, height=55px) no-repeat center center;
+        }
+    }
+
+    &.disable {
+        border-color: $phone-big-disable-color;
+
+        & .controll__btn:before {
+            background: svg-load('call.svg', fill=$phone-big-disable-color, width=55px, height=55px) no-repeat center center;
+        }
+    }
+
+    &.call {
+        border-color: $phone-big-disable-color;
+
+        & .controll__btn {
+
+            background-color: $phone-big-call-color;
+
+            &:before {
+                background: svg-load('call.svg', fill=$phone-big-disable-color, width=55px, height=55px) no-repeat center center;
+            }
+        }
+
+        & .controll__tooltip {
+            top: 10px;
+            opacity: 1;
+            visibility: visible;
+            transition: .3s;
+            z-index: 100;
+            width: initial;
+
+            &:after {
+                content: "";
+                position: relative;
+                display: block;
+                background-color: white;
+
+                width: 30px;
+                height: 30px;
+
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%,-50%) rotate(45deg);
+
+                border-bottom: 3px solid $text-color;
+                border-right: 3px solid $text-color;
+            }
+        }
     }
 }

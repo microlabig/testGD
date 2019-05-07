@@ -1,8 +1,8 @@
 <template lang="pug">  
   .app-root
 
-    //- .keypad
-    //-   button(type="button").keypad__btn
+    //- .controll
+    //-   button(type="button").controll__btn
 
     //- nav.menu
     //-   ul.menu__list
@@ -97,8 +97,8 @@
     //-                 )
     //-                 line(x1="0" y1="200" x2="0" y2="0" stroke="black" stroke-width="3%")
     //-                 line(x1="0" y1="200" x2="345" y2="200" stroke="black" stroke-width="3%")
-    //-     .keypad.keypad--phone
-    //-       button(type="button").keypad__btn
+    //-     .controll.controll--phone
+    //-       button(type="button").controll__btn
       
     section.phone
       .container
@@ -148,20 +148,30 @@
                 ).numpad__item
                   label.numpad__container
                     .numpad__text 5
-                    button(typ.numpad__buttone="button")
+                    button(type="button")
                 li.numpad__item
                   label.numpad__container
                     .numpad__text *
-                    button(typ.numpad__buttone="button")
+                    button(type="button")
                 li.numpad__item
                   label.numpad__container.zero
                     .numpad__text 0
                     .numpad__text +
-                    button(typ.numpad__buttone="button")
+                    button(type="button")
                 li.numpad__item
                   label.numpad__container
                     .numpad__text #
-                    button(typ.numpad__buttone="button")
+                    button(type="button")
+
+            .controll.controll--phonebig
+              .controll__wrapper
+                .controll__tooltip
+                  .controll__text 
+                    p Calling...
+                .controll__buttonbox                 
+                  button(type="button").controll__btn
+
+
 
 
        
