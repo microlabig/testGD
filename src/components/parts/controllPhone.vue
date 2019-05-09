@@ -5,5 +5,8 @@
                 .controll__text 
                     p Calling...
             .controll__buttonbox                 
-                button(type="button").controll__btn  
+                button(
+                    type="button"
+                    @click="$emit('showPhone')"
+                ).controll__btn  
 </template>

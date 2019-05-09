@@ -126,6 +126,15 @@
             display: block;            
             background: svg-load('backspace.svg', fill=$text-color) no-repeat center center;
         }
+
+        &.hidden {
+            visibility: hidden;
+        }
+    }
+
+    &.disable {
+        user-select: none;
+        opacity: .5;
     }
 }
 
@@ -143,6 +152,10 @@
     & .contacts__table {
         height: 100%;
         overflow: auto;
+    }
+
+    &.hidden {
+        visibility: hidden;
     }
 }
 

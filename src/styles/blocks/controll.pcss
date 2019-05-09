@@ -1,64 +1,20 @@
-/* .controll {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.controll__back {    
-    width: 30px;
-    height: 30px;
-    position: relative;
-
-    &:before {
-        content: "";
-        position: absolute;
-
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-
-        display: block;
-        width: 60px;
-        height: 60px;
-        background: svg-load('left-arrow.svg', fill=$text-color, width=20px, height=20px) no-repeat center center;       
-    }
-}
-
-.controll__save {
-    width: 40px;
-    height: 40px;
-    position: relative;
-
-    &:before {
-        content: "";
-        position: absolute;
-
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-
-        display: block;
-        width: 60px;
-        height: 60px;
-        background: svg-load('save.svg', fill=$text-color, width=30px, height=30px) no-repeat center center;
-    }
-} */
-
 .controll {
     cursor: pointer;
     position: fixed;
 
-    bottom: 30px;
+    bottom: 35px;
     right: 25px;
 }
 
 .controll__tooltip {
+    height: 0;
     position: relative;
 
     visibility: hidden;
     opacity: 0;
     top: -9999px;
     width: 0;
+    transition: top .3s;
 }
 
 .controll__text {
@@ -76,6 +32,8 @@
 }
 
 .controll__buttonbox {
+    position: relative;
+
     width: 80px;
     height: 80px;
 
@@ -83,6 +41,15 @@
     border: 3px solid $text-color;
 
     overflow: hidden;
+
+    &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+    }
 }
 
 .controll__btn {
@@ -173,7 +140,9 @@
     }
 
     &.disable {
-        border-color: $phone-big-disable-color;
+        & .controll__buttonbox {
+            border-color: $phone-big-disable-color;
+        }
 
         & .controll__btn:before {
             background: svg-load('call.svg', fill=$phone-big-disable-color, width=55px, height=55px) no-repeat center center;
@@ -193,10 +162,10 @@
         }
 
         & .controll__tooltip {
+            height: initial;
             top: 10px;
             opacity: 1;
             visibility: visible;
-            transition: .3s;
             z-index: 100;
             width: initial;
 
@@ -211,7 +180,7 @@
 
                 left: 50%;
                 top: 50%;
-                transform: translate(-50%,-50%) rotate(45deg);
+                transform: translate(-50%, -50%) rotate(45deg);
 
                 border-bottom: 3px solid $text-color;
                 border-right: 3px solid $text-color;

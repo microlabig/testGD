@@ -5,5 +5,16 @@
                 .controll__text 
                     p Calling...
             .controll__buttonbox                 
-                button(type="button").controll__btn  
+                button(
+                    type="button"
+                    :disabled="setEmptyPhone"
+                ).controll__btn  
 </template>
+
+<script>
+    export default {
+        props: {
+            setEmptyPhone: Boolean
+        }
+    }
+</script>

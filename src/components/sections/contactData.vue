@@ -3,7 +3,9 @@
       .container
         form.form            
           .form__wrapper    
-            formControll
+            formControll(
+              @showBaseWrapper="$emit('showBaseWrapper')"
+            )
             label.form__element
               .form__avatar
                 img(alt="Аватар" src="../../images/avatars/contact.jpg").form__avatar-img
@@ -16,7 +18,9 @@
             label.form__element
               input(type="text" placeholder="Date of birth mm/dd/yyyy").form__input
             chartComponent
-        controllPhone
+        controllPhone(
+          @showPhone="$emit('showPhone')"
+        )
 </template>
 
 <script>

@@ -8,6 +8,7 @@
             li(
               v-for="contact in 10"
               :key="contact"
+              @click="$emit('showContactInfo')"
             ).contacts__item
               .contacts__row
                 .contacts__avatar

@@ -3,40 +3,39 @@
       .container
         form.form.form--phone            
           .form__wrapper    
-            formControllPhone
-
-            .form__match-table
-              .contacts__table
-                ul.contacts__list
-                  li(
-                    v-for="contact in 11"
-                    :key="contact"
-                  ).contacts__item
-                    .contacts__row
-                      .contacts__avatar
-                        .contacts__avatar-box
-                          img(alt="Avatar" src="../../images/avatars/contact.jpg").contacts__image
-                      .contacts__description
-                        .contacts__name Giacomo Auilizzoni
-                        .contacts__number +78121234567
-                      .contacts__information
-                        .contacts__information-box
+            formControllPhone(
+                :setEmptyPhone="setEmptyPhone"
+                :setIsEmptyInput="setIsEmptyInput"
+                @showBaseWrapper="$emit('showBaseWrapper')"
+            )
+            matchTable(
+                :class="{'hidden': setEmptyPhone}"
+            )
             .form__row
               label.form__element
-                input(type="text" placeholder="Please type a number...").form__input.phonenumber
-              label.form__element.form__element--button.backspace
+                input(
+                    type="text" 
+                    placeholder="Please type a number..."
+                    v-model="phoneNumber"
+                ).form__input.phonenumber
+              label(
+                  :class="{'hidden': setIsEmptyInput}"
+                  @click.prevent="deleteLastSymbolInPhoneNumber"
+              ).form__element.form__element--button.backspace
                 button(type="button").form__button
-
-            horizontalLine  
-            
+            horizontalLine              
             numpad
-
-            controllPhoneBig
+            controllPhoneBig(
+                :setEmptyPhone="setEmptyPhone"
+                :setIsEmptyInput="setIsEmptyInput"
+                :class="{'disable':setIsEmptyInput}"
+            )
 </template>
 
 <script>
     import formControllPhone from "../parts/formControllPhone";
     import controllPhoneBig from "../parts/controllPhoneBig";
+    import matchTable from "../parts/matchTable";
     import horizontalLine from "../parts/horizontalLine";
     import numpad from "../parts/numpad";
 
@@ -44,8 +43,46 @@
         components: {
             formControllPhone,
             controllPhoneBig,
+            matchTable,
             horizontalLine,
             numpad
+        },
+        props: {
+            modeShowPhone: String
+        },
+        data() {
+            return {
+                isEmptyInput: true,
+                phoneNumber: ""
+            }
+        },
+        computed: {
+            setEmptyPhone() {
+                let f = true;
+                switch (this.modeShowPhone) {
+                    case 'empty':
+                        f = true;            
+                        break;
+                    case 'contact':
+                        f = false;                  
+                        break;                      
+                }
+                return f;
+            },
+            setIsEmptyInput() {
+                if (!this.phoneNumber) 
+                    this.isEmptyInput = true; 
+                else 
+                    this.isEmptyInput = false;                
+                return this.isEmptyInput;
+            }
+        },
+        methods: {
+            deleteLastSymbolInPhoneNumber() {                
+                let str = '';                
+                str = this.phoneNumber.substring(0, this.phoneNumber.length - 1);                
+                this.phoneNumber = str;
+            }
         }
     }
 </script>
