@@ -24,7 +24,9 @@
               ).form__element.form__element--button.backspace
                 button(type="button").form__button
             horizontalLine              
-            numpad
+            numpad(
+                @numpadClicked="numpadClicked"
+            )
             controllPhoneBig(
                 :setEmptyPhone="setEmptyPhone"
                 :setIsEmptyInput="setIsEmptyInput"
@@ -82,6 +84,9 @@
                 let str = '';                
                 str = this.phoneNumber.substring(0, this.phoneNumber.length - 1);                
                 this.phoneNumber = str;
+            },
+            numpadClicked(num) {
+                this.phoneNumber += num;
             }
         }
     }

@@ -6,52 +6,59 @@
                 :key="num"
             ).numpad__item
                 label(
-                    @click="clicked"
+                    @click.prevent="clicked(num)"
                 ).numpad__container
                     .numpad__text {{num}}
-                    button(type="button")
+                    button(type="button").numpad__button
             li.numpad__item
-                label.numpad__container
+                label(
+                    @click.prevent="clicked('*')"
+                ).numpad__container
                     .numpad__text *
-                    button(type="button")
+                    button(type="button").numpad__button
             li.numpad__item
-                label.numpad__container.zero
+                label(
+                    @click.prevent="doubleClicked"
+                ).numpad__container.zero
                     .numpad__text 0
                     .numpad__text +
-                    button(type="button")
+                    button(type="button").numpad__button
             li.numpad__item
-                label.numpad__container
+                label(
+                    @click.prevent="clicked('#')"
+                ).numpad__container
                     .numpad__text #
-                    button(type="button")
+                    button(type="button").numpad__button
 </template>
 
 <script>
+    var clicks = 0, timeout;
+
+    import { setTimeout, clearTimeout } from 'timers';
     export default {
         data() {
             return {
-                result: [], // содержит тип модели кликов  
-                delay: 700, 
-                clicks: 0,
-                timer: null
+                number: []
             }
-        },
+        },        
         methods: {
-            clicked() {
-                this.clicks++;
-                if (this.clicks === 1) {
-                    var self = this;
-                    this.timer = setTimeout( () => {
-                        self.result.push(event.type);
-                        self.clicks = 0;
-                    }, this.delay);
-                } else {
-                    clearTimeout(this.timer);  
-                    this.result.push('dblclick');
-                    this.clicks = 0;
-                }  
-                console.log(this.result);
-                      
+            clicked(num) {
+                this.$emit('numpadClicked', num);
+            },
+            doubleClicked() {                
+                clicks++;
+                if (clicks == 1) { // click
+                   timeout = setTimeout( ()=> {
+                       clicks = 0; 
+                       this.$emit('numpadClicked', '0');                      
+                   }, 250);
+                } else { // double click
+                    clearTimeout(timeout);
+                    clicks = 0; 
+                    this.$emit('numpadClicked', '+');                   
+                }
             }
+
         }
     }
 </script>
