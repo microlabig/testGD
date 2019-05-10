@@ -9,6 +9,7 @@
                 :showBaseContacts="showBaseContacts"
                 :showBaseHistory="showBaseHistory"
             )  
+            pre {{users}}
             contacts(
                 v-if="showBaseWrapper && showBaseContacts" 
                 @showContactInfo="showContactInfo"               
@@ -42,6 +43,8 @@
     import controll from "./parts/controll";
     import controllPhoneBig from "./parts/controllPhoneBig";
 
+    import {mapActions} from 'vuex';
+
 
     export default {
         components: {
@@ -57,10 +60,16 @@
                 showContactData: false,
                 showPhoneWrapper: false,
 
-                modeShowPhone: 'empty'
+                modeShowPhone: 'empty',
+
+                users: []
             }
         },
+        created() {            
+            this.fetchUsers().then(data => this.users = [...data]);                       
+        },
         methods: {
+            ...mapActions('users', ['fetchUsers']),
             showHistory() {
                 this.showBaseContacts = false;
                 this.showBaseHistory = true;

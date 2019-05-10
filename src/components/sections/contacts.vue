@@ -22,13 +22,21 @@
 </template>
 
 <script>
-    import searchComponent from "../parts/search";
-    import horizontalLine from "../parts/horizontalLine";
+import searchComponent from "../parts/search";
+import horizontalLine from "../parts/horizontalLine";
 
-    export default {
-        components: {
-            searchComponent, 
-            horizontalLine
-        }
-    }
+//import { mapGetters } from "vuex";
+
+export default {
+  components: {
+    searchComponent,
+    horizontalLine
+  },
+  computed: {
+    //...mapGetters("getUsers")
+    /* ...mapState('reviews', { // добавим дополнительное свойство из данных в store 'categories'
+            reviews: state => state.reviews
+          }) */
+  }
+};
 </script>
