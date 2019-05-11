@@ -6,17 +6,21 @@
         .contacts__table
           ul.contacts__list
             li(
-              v-for="contact in 10"
-              :key="contact"
-              @click="$emit('showContactInfo')"
+              v-for="user in users"
+              :key="user.lastname"
+              @click="$emit('showContactInfo', user)"
             ).contacts__item
               .contacts__row
                 .contacts__avatar
                   .contacts__avatar-box
-                    img(alt="Avatar" src="../../images/avatars/contact.jpg").contacts__image
+                    img(
+                      alt="Avatar" 
+                      :src="`${user.userpic}`"
+                      @error="imageError($event,user)"
+                    ).contacts__image
                 .contacts__description
-                  .contacts__name Giacomo Auilizzoni
-                  .contacts__number +78121234567
+                  .contacts__name {{user.name}} {{user.lastName}}
+                  .contacts__number {{user.phoneNumber}}
                 .contacts__information
                   .contacts__information-box    
 </template>
@@ -25,18 +29,19 @@
 import searchComponent from "../parts/search";
 import horizontalLine from "../parts/horizontalLine";
 
-//import { mapGetters } from "vuex";
-
 export default {
   components: {
     searchComponent,
     horizontalLine
   },
-  computed: {
-    //...mapGetters("getUsers")
-    /* ...mapState('reviews', { // добавим дополнительное свойство из данных в store 'categories'
-            reviews: state => state.reviews
-          }) */
+  props: {
+    users: Array
+  },
+  methods: {
+    imageError(e,user) { // в случае ошибки загрузки аватарки
+      e.target.src = './images/contact.jpg';
+      user.userpic = e.target.src;
+    }
   }
 };
 </script>

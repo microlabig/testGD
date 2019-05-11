@@ -9,8 +9,8 @@
                 :showBaseContacts="showBaseContacts"
                 :showBaseHistory="showBaseHistory"
             )  
-            pre {{users}}
             contacts(
+                :users="users"
                 v-if="showBaseWrapper && showBaseContacts" 
                 @showContactInfo="showContactInfo"               
             )   
@@ -22,8 +22,10 @@
             )
         contactData(
             v-else-if="!showBaseWrapper && showContactData"
+            :currentUser="currentUser"
             @showBaseWrapper="showBaseWrapperData"
             @showPhone="showContactPhone"
+            @saveCurrentUser="saveCurrentUser"
         )
         phone(
             v-else-if="!showBaseWrapper && showPhoneWrapper"
@@ -62,14 +64,15 @@
 
                 modeShowPhone: 'empty',
 
-                users: []
+                users: [],
+                currentUser: {}
             }
         },
         created() {            
             this.fetchUsers().then(data => this.users = [...data]);                       
         },
         methods: {
-            ...mapActions('users', ['fetchUsers']),
+            ...mapActions('users', ['fetchUsers', 'saveCurrentEditedUser']),
             showHistory() {
                 this.showBaseContacts = false;
                 this.showBaseHistory = true;
@@ -88,14 +91,23 @@
                 this.showContactData = false;
                 this.showBaseWrapper = true;
             },
-            showContactInfo() {
+            showContactInfo(usr) {
                 this.showBaseWrapper = false;                
                 this.showContactData = true;
+                this.currentUser = usr;
             },
             showContactPhone() {
                 this.showContactData = false;
                 this.modeShowPhone = 'contact';
                 this.showPhoneWrapper = true;
+            },
+            saveCurrentUser(userEdited) {
+                this.currentUser = {
+                    ...this.currentUser,
+                    ...userEdited
+                };   
+                this.saveCurrentEditedUser(this.currentUser); 
+                this.users = this.users.map(user => user.id === this.currentUser.id ? this.currentUser : user);
             }
         }
 

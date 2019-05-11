@@ -7,6 +7,9 @@ const users = {
     mutations: {
         SET_USERS: (state, data) => {
             state.users.push(data);
+        },
+        EDIT_USER: (state, userEdited) => {
+            state.users = state.users.map(user => user.id === userEdited.id ? userEdited : user);
         }
     },
 
@@ -24,6 +27,7 @@ const users = {
                         return 1;  
                     return 0; // никакой сортировки
                 });
+                /*
                 data.sort( (a,b) => { // теперь сортируем по фамилии
                     let lastNameA = a.lastName.toLowerCase(), lastNameB = b.lastName.toLowerCase();
                     if (lastNameA < lastNameB) 
@@ -31,13 +35,18 @@ const users = {
                     if (lastNameA > lastNameB) 
                         return 1;  
                     return 0; 
-                });
+                }); */
                 commit('SET_USERS', data); 
                 return data;
             } catch (error) {
                 throw new Error('Ошибка загрузки контактов');
             } 
+        },
+        // сохранение контакта в стор
+        saveCurrentEditedUser({commit}, userEdited) { 
+            commit('EDIT_USER', userEdited);
         }
+
     },
 
     getters: {
