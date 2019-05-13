@@ -11,7 +11,13 @@
     }
 }
 
+.contacts__list {
+    position: relative;
+    z-index: 1;
+}
+
 .contacts__item {   
+    touch-action: auto;
     min-height: 35px;
 
     &:nth-child(odd) {
@@ -23,6 +29,32 @@
     }
 
     color: black;
+
+    &.is-dragged {
+        position: absolute;
+        width: 100%;
+        z-index: 100;
+    }
+    &.displaynone {
+        display: none;
+    }
+    &.hidden {
+        visibility: hidden;
+    }
+
+    //--------------------------------asd
+    &.is-found {
+        & .contact__dropzone {
+            height: 5px;
+        }        
+    }
+}
+
+.contact__dropzone,
+.contact__dropzone--under {
+    width: 100%;
+    height: 0px;
+    background-color: $controll-color;
 }
 
 .contacts__row {
@@ -61,6 +93,7 @@
     font-weight: $bold;
     border-left: 3px solid $text-color;
     border-right: 3px solid $text-color;
+    padding-left: 1%;
 }
 
 .contacts__information {
@@ -123,4 +156,5 @@
 .contacts__date {
     text-align: right;
     font-weight: $bold;
+    width: 95%;
 }

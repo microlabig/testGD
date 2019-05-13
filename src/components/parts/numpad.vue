@@ -35,6 +35,7 @@
     var clicks = 0, timeout;
 
     import { setTimeout, clearTimeout } from 'timers';
+
     export default {
         data() {
             return {
@@ -45,6 +46,7 @@
             clicked(num) {
                 this.$emit('numpadClicked', num);
             },
+            
             doubleClicked() {                
                 clicks++;
                 if (clicks == 1) { // click

@@ -9,13 +9,15 @@
                 :showBaseContacts="showBaseContacts"
                 :showBaseHistory="showBaseHistory"
             )  
-            contacts(
-                :users="users"
-                v-if="showBaseWrapper && showBaseContacts" 
+            contacts(                
+                v-if="showBaseWrapper && showBaseContacts"
+                :users="users" 
                 @showContactInfo="showContactInfo"               
             )   
             history(
                 v-if="showBaseWrapper && showBaseHistory"
+                :users="users"
+                :historyCalls="historyCalls"
             )      
             controll(
                 @showPhone="showPhone"
@@ -65,7 +67,9 @@
                 modeShowPhone: 'empty',
 
                 users: [],
-                currentUser: {}
+                currentUser: {},
+
+                historyCalls: []
             }
         },
         created() {            

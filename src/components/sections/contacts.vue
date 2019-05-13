@@ -7,7 +7,7 @@
           ul.contacts__list
             li(
               v-for="user in users"
-              :key="user.lastname"
+              :key="user.id"
               @click="$emit('showContactInfo', user)"
             ).contacts__item
               .contacts__row
