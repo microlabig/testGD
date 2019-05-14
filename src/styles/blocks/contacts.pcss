@@ -30,10 +30,11 @@
 
     color: black;
 
-    &.is-dragged {
+    &.is_moved {
         position: absolute;
         width: 100%;
         z-index: 100;
+        border: 1px solid $controll-color;      
     }
     &.displaynone {
         display: none;
@@ -42,9 +43,14 @@
         visibility: hidden;
     }
 
-    //--------------------------------asd
-    &.is-found {
+    &.is_found {
         & .contact__dropzone {
+            height: 5px;
+        }        
+    }
+
+    &.is_found--under {
+        & .contact__dropzone--under {
             height: 5px;
         }        
     }
