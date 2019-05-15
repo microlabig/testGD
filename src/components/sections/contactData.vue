@@ -9,7 +9,11 @@
             )
             label.form__element
               .form__avatar
-                img(alt="Аватар" :src="`${currentUser.userpic}`").form__avatar-img
+                img(
+                  alt="Аватар" 
+                  :src="`${currentUser.userpic}`"
+                  @error="errorLoadingImage"
+                ).form__avatar-img
             div(
               v-for="(item, index) in userData" 
               :key="item"
@@ -34,15 +38,18 @@ import controllPhone from "../parts/controllPhone";
 import contactDataInput from "../parts/contactDataInput";
 
 export default {
+
     components: {
         formControll,
         chartComponent,
         controllPhone,
         contactDataInput
     },
+
     props: {
       currentUser: Object
     },
+
     data() {
       return {
         userData: [
@@ -67,6 +74,7 @@ export default {
         }
       }
     },
+
     methods: {
       customInput(value, index) {
         switch (index) {
@@ -83,6 +91,10 @@ export default {
             this.currentUserEdited.dateOfBirth = value;
             break;
         }          
+      },
+
+      errorLoadingImage(e) {        
+        e.target.src = "./images/contact.jpg";        
       }
     }
 }

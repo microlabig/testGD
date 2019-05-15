@@ -39,7 +39,8 @@
     export default {
         data() {
             return {
-                number: []
+                number: [],
+                clicksTime: 300
             }
         },        
         methods: {
@@ -53,7 +54,7 @@
                    timeout = setTimeout( ()=> {
                        clicks = 0; 
                        this.$emit('numpadClicked', '0');                      
-                   }, 250);
+                   }, this.clicksTime);
                 } else { // double click
                     clearTimeout(timeout);
                     clicks = 0; 

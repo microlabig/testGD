@@ -9,7 +9,7 @@
             @drop="drop"
           ).contacts__list
             li(
-              v-for="user in historyUsers"
+              v-for="user in historyUsersCalls"
               :key="user.id"              
             ).contacts__item
               .contact__dropzone
@@ -55,18 +55,10 @@ var parentUL = {}, // UL - родитель
     timerTouchInterval = 100; // интервал таймера 
 
 export default {
-  props: {
-    users: Array // FIXME: убрать 
-  },
-
   data() {
     return {
-      historyUsers: []
+      historyUsersCalls: [] // история звонков пользователям
     }
-  },
-
-  created() {
-    this.historyUsers = [...this.users];
   },
 
   methods: {
@@ -241,17 +233,17 @@ export default {
         else {                            
           let tempAllLI = []; // временный массив для хранения 
 
-          // удалим из historyUsers перемещаемую li, предварительно сохранив ее во временную переменную tempHistoryUser
-          const tempHistoryUser = this.historyUsers[currentMovedLiNum];
-          this.historyUsers.splice(currentMovedLiNum, 1);
+          // удалим из historyUsersCalls перемещаемую li, предварительно сохранив ее во временную переменную tempHistoryUser
+          const tempHistoryUser = this.historyUsersCalls[currentMovedLiNum];
+          this.historyUsersCalls.splice(currentMovedLiNum, 1);
 
           // заполним временный массив частями: [0..то место куда перемещаем-1], [перемещаемый элемент], [все оставшееся]
-          for (i=0; i < currLINum; i++) tempAllLI.push(this.historyUsers[i]); 
+          for (i=0; i < currLINum; i++) tempAllLI.push(this.historyUsersCalls[i]); 
           tempAllLI.push(tempHistoryUser);
-          for (i = currLINum + 1; i < this.historyUsers.length+1; i++) tempAllLI.push(this.historyUsers[i-1]);         
+          for (i = currLINum + 1; i < this.historyUsersCalls.length+1; i++) tempAllLI.push(this.historyUsersCalls[i-1]);         
                     
-          // обновим получившийся массив historyUsers с историей звонков
-          this.historyUsers = [...tempAllLI];
+          // обновим получившийся массив historyUsersCalls с историей звонков
+          this.historyUsersCalls = [...tempAllLI];
         }
       }
 

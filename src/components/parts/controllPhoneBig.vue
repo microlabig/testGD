@@ -7,14 +7,14 @@
             .controll__buttonbox                 
                 button(
                     type="button"
-                    :disabled="setEmptyPhone"
+                    :disabled="inputIsEmpty"
                 ).controll__btn  
 </template>
 
 <script>
     export default {
         props: {
-            setEmptyPhone: Boolean
+            inputIsEmpty: Boolean
         }
     }
 </script>

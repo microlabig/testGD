@@ -11,13 +11,12 @@
             )  
             contacts(                
                 v-if="showBaseWrapper && showBaseContacts"
-                :users="users" 
+                :usersSearching="usersSearching"                 
                 @showContactInfo="showContactInfo"               
+                @searchStrInputed="searchStrInputed"
             )   
             history(
                 v-if="showBaseWrapper && showBaseHistory"
-                :users="users"
-                :historyCalls="historyCalls"
             )      
             controll(
                 @showPhone="showPhone"
@@ -31,8 +30,10 @@
         )
         phone(
             v-else-if="!showBaseWrapper && showPhoneWrapper"
-            :modeShowPhone="modeShowPhone"
+            :phoneCurrentUser="phoneCurrentUser"
             @showBaseWrapper="showBaseWrapperData"
+            @showContactInfo="showContactInfo"
+            @saveNewUserData="saveNewUserData"
         )
 
 </template>
@@ -48,14 +49,17 @@
     import controllPhoneBig from "./parts/controllPhoneBig";
 
     import {mapActions} from 'vuex';
+import { log } from 'util';
 
 
     export default {
+
         components: {
             navigation, contacts, history, controll, 
             contactData, 
             phone
         },
+
         data() {
             return {
                 showBaseWrapper: true,
@@ -64,19 +68,73 @@
                 showContactData: false,
                 showPhoneWrapper: false,
 
-                modeShowPhone: 'empty',
+                users: [], // список всех пользователей
+                currentUser: {}, // текущий пользователь,
+                phoneCurrentUser: "", // номер телефона текущего пользователя
 
-                users: [],
-                currentUser: {},
-
-                historyCalls: []
+                searchStr: ""
             }
         },
+
         created() {            
-            this.fetchUsers().then(data => this.users = [...data]);                       
+            this.fetchUsers().then(data => this.users = [...data]);       
+        },        
+
+        computed: {
+            usersSearching() { // поиск в списке пользователей
+                let tempUsers = [],
+                    str = this.searchStr.toLowerCase(),
+                    usersStr = '';
+
+                this.sortArrayByName(this.users);  
+
+                for (let i = 0; i < this.users.length; i++) {
+                    usersStr = this.users[i].name.toLowerCase();
+                    if (usersStr.indexOf(str) !== -1) {
+                        tempUsers.push(this.users[i]);
+                        continue;
+                    }
+                    usersStr = this.users[i].lastName.toLowerCase();
+                    if (usersStr.indexOf(str) !== -1) {
+                        tempUsers.push(this.users[i]);
+                        continue;
+                    }
+                    usersStr = this.users[i].phoneNumber.toLowerCase();
+                    if (usersStr.indexOf(str) !== -1) {
+                        tempUsers.push(this.users[i]);
+                        continue;
+                    }
+                }
+                return tempUsers;
+            },
+
+            
+            getMaxIdUsers() {
+                let max = 0;
+                if (this.users.length > 0)
+                    this.users.forEach(user => max = user.id > max ? user.id : max);
+                    
+                return max;
+            } 
         },
+
         methods: {
+
             ...mapActions('users', ['fetchUsers', 'saveCurrentEditedUser']),
+
+            sortArrayByName(arr) {                
+                if (arr.length>0) {
+                    arr.sort( (a,b) => { // сортируем список в алфавитном порядке (по имени и по возрастанию)
+                        let nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                        if (nameA < nameB) // сортируем по возрастанию
+                            return -1;
+                        if (nameA > nameB) 
+                            return 1;  
+                        return 0; // никакой сортировки
+                    });
+                }
+            },
+
             showHistory() {
                 this.showBaseContacts = false;
                 this.showBaseHistory = true;
@@ -85,9 +143,9 @@
                 this.showBaseContacts = true;
                 this.showBaseHistory = false;
             },
-            showPhone() {                                
+            showPhone() {                       
+                this.phoneCurrentUser = "";
                 this.showBaseWrapper = false;
-                this.modeShowPhone = 'empty';
                 this.showPhoneWrapper = true;
             },
             showBaseWrapperData() {
@@ -96,22 +154,36 @@
                 this.showBaseWrapper = true;
             },
             showContactInfo(usr) {
-                this.showBaseWrapper = false;                
-                this.showContactData = true;
                 this.currentUser = usr;
+                this.showBaseWrapper = false;                
+                this.showContactData = true;                
             },
             showContactPhone() {
+                this.phoneCurrentUser = this.currentUser.phoneNumber;
                 this.showContactData = false;
-                this.modeShowPhone = 'contact';
                 this.showPhoneWrapper = true;
             },
+
             saveCurrentUser(userEdited) {
+                //TODO: валидация данных полей ввода
                 this.currentUser = {
                     ...this.currentUser,
                     ...userEdited
                 };   
                 this.saveCurrentEditedUser(this.currentUser); 
                 this.users = this.users.map(user => user.id === this.currentUser.id ? this.currentUser : user);
+            },
+
+            saveNewUserData(number) {                
+                this.currentUser.phoneNumber = number;
+                this.currentUser.id = this.getMaxIdUsers + 1;           
+
+                this.showPhoneWrapper = false;             
+                this.showContactData = true;                 
+            },
+
+            searchStrInputed(str) {
+                this.searchStr = str;                               
             }
         }
 

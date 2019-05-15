@@ -7,6 +7,6 @@
             .controll__buttonbox                 
                 button(
                     type="button"
-                    @click="$emit('showPhone')"
+                    @click.prevent="$emit('showPhone')"
                 ).controll__btn  
 </template>

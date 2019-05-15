@@ -3,16 +3,28 @@
         .contacts__table
             ul.contacts__list
                 li(
-                    v-for="contact in 11"
-                    :key="contact"
+                    v-for="contact in userSearching"
+                    :key="contact.id"
+                    @click="$emit('showContactInfo', contact)"
                 ).contacts__item
                     .contacts__row
                         .contacts__avatar
                             .contacts__avatar-box
-                                img(alt="Avatar" src="../../images/avatars/contact.jpg").contacts__image
+                                img(
+                                    alt="Avatar" 
+                                    :src="`${contact.userpic}`"
+                                ).contacts__image
                         .contacts__description
-                            .contacts__name Giacomo Auilizzoni
-                            .contacts__number +78121234567
+                            .contacts__name {{contact.name}} {{contact.lastName}}
+                            .contacts__number {{contact.phoneNumber}}
                         .contacts__information
                             .contacts__information-box            
 </template>
+
+<script>
+export default {
+    props: {
+        userSearching: Array
+    }
+}
+</script>

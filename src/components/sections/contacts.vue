@@ -1,12 +1,14 @@
 <template lang="pug">
     section.contacts
       .container
-        searchComponent
+        searchComponent(
+          @searchStrInputed="searchStr => $emit('searchStrInputed',searchStr)"
+        )
         horizontalLine
         .contacts__table
           ul.contacts__list
             li(
-              v-for="user in users"
+              v-for="user in usersSearching"
               :key="user.id"
               @click="$emit('showContactInfo', user)"
             ).contacts__item
@@ -16,7 +18,7 @@
                     img(
                       alt="Avatar" 
                       :src="`${user.userpic}`"
-                      @error="imageError($event,user)"
+                      @error="errorLoadingImage($event,user)"
                     ).contacts__image
                 .contacts__description
                   .contacts__name {{user.name}} {{user.lastName}}
@@ -35,10 +37,10 @@ export default {
     horizontalLine
   },
   props: {
-    users: Array
+    usersSearching: Array
   },
   methods: {
-    imageError(e,user) { // в случае ошибки загрузки аватарки
+    errorLoadingImage(e,user) { // в случае ошибки загрузки аватарки
       e.target.src = './images/contact.jpg';
       user.userpic = e.target.src;
     }
