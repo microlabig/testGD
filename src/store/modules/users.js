@@ -13,6 +13,10 @@ const users = {
 
         EDIT_USER: (state, userEdited) => {
             state.users = state.users.map(user => user.id === userEdited.id ? userEdited : user);
+        },
+
+        ADD_USER: (state, newUser) => {
+            state.users.push(newUser);
         }
     },
 
@@ -32,6 +36,11 @@ const users = {
         // сохранение контакта в стор
         saveCurrentEditedUser({commit}, userEdited) { 
             commit('EDIT_USER', userEdited);
+        },
+
+        // добавление нового пользователя
+        addNewUser({commit}, newUser) {
+            commit('ADD_USER', newUser);
         }
 
     },

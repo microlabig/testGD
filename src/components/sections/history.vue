@@ -38,6 +38,7 @@
 </template>
 
 <script>
+
 var parentUL = {}, // UL - родитель
     movedLI = {}, // перемещаемый объект li-шка
     currentMovedLiNum = 0, // номер перемещаемой li (movedLI)    
@@ -55,10 +56,19 @@ var parentUL = {}, // UL - родитель
     timerTouchInterval = 100; // интервал таймера 
 
 export default {
-  data() {
+  props: {
+    historyUsersCalls: Array
+  },
+
+  data() {    
     return {
-      historyUsersCalls: [] // история звонков пользователям
+      //historyUsersCalls: [] // история звонков пользователям
+      historyArray: []
     }
+  },
+
+  created() {
+    this.historyArray = [...this.historyUsersCalls];
   },
 
   methods: {
@@ -234,16 +244,16 @@ export default {
           let tempAllLI = []; // временный массив для хранения 
 
           // удалим из historyUsersCalls перемещаемую li, предварительно сохранив ее во временную переменную tempHistoryUser
-          const tempHistoryUser = this.historyUsersCalls[currentMovedLiNum];
-          this.historyUsersCalls.splice(currentMovedLiNum, 1);
+          const tempHistoryUser = this.historyArray[currentMovedLiNum];
+          this.historyArray.splice(currentMovedLiNum, 1);
 
           // заполним временный массив частями: [0..то место куда перемещаем-1], [перемещаемый элемент], [все оставшееся]
-          for (i=0; i < currLINum; i++) tempAllLI.push(this.historyUsersCalls[i]); 
+          for (i=0; i < currLINum; i++) tempAllLI.push(this.historyArray[i]); 
           tempAllLI.push(tempHistoryUser);
-          for (i = currLINum + 1; i < this.historyUsersCalls.length+1; i++) tempAllLI.push(this.historyUsersCalls[i-1]);         
+          for (i = currLINum + 1; i < this.historyArray.length+1; i++) tempAllLI.push(this.historyArray[i-1]);         
                     
           // обновим получившийся массив historyUsersCalls с историей звонков
-          this.historyUsersCalls = [...tempAllLI];
+          this.historyArray = [...tempAllLI];
         }
       }
 
@@ -257,6 +267,8 @@ export default {
           if (li.classList.contains("is_found")) li.classList.remove("is_found");
       });  
       if (lastLI.classList.contains('is_found--under')) lastLI.classList.remove("is_found--under");
+
+      this.$emit('itemMoved',this.historyArray);
     }
   }
 };

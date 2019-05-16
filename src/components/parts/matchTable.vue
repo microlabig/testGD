@@ -5,7 +5,7 @@
                 li(
                     v-for="contact in userSearching"
                     :key="contact.id"
-                    @click="$emit('showContactInfo', contact)"
+                    @click="$emit('userChange', contact.id)"
                 ).contacts__item
                     .contacts__row
                         .contacts__avatar

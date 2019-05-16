@@ -3,16 +3,15 @@
         label.form__element.form__element--button.back
             button(
                 type="button"
-                @click.prevent="$emit('showBaseWrapper')"
+                @click.prevent="!is_calling ? $emit('showBaseWrapper') : true"
             ).form__button
         label(
-            :class="{'disable':inputIsEmpty || lengthUserSearching!==0}"
-            inputIsEmpty
+            :class="{'disable':is_calling || inputIsEmpty || lengthUserSearching!==0}"
         ).form__element.form__element--button.save
             button(
                 type="button"                
                 :disabled="inputIsEmpty || lengthUserSearching!==0"
-                @click.prevent="$emit('saveUserData')"
+                @click.prevent="!is_calling ? $emit('saveUserData') : true"
             ).form__button 
 </template>
 
@@ -20,7 +19,8 @@
     export default {
         props: {
             inputIsEmpty: Boolean,
-            lengthUserSearching: Number
+            lengthUserSearching: Number,
+            is_calling: Boolean
         }
     }
 </script>

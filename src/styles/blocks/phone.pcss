@@ -1,0 +1,47 @@
+.phone {
+    &.disable {
+
+        & .form__match-table {            
+            & .contacts__table {
+                border-color: $phone-big-disable-color;
+
+                & .contacts__item{
+                    &:nth-child(odd) {
+                        background-color: rgba($text-color, .55);
+                    }
+                    &:nth-child(even) {
+                        background-color: rgba($text-color, .45);
+                    }
+                    & .contacts__description {
+                        border-color: $phone-big-disable-color;
+                    }
+                    & .contacts__information-box { 
+                        background: svg-load('information.svg', fill=$phone-big-disable-color, width=25px, height=25px) no-repeat center center;
+                    }
+                }
+                
+            }
+        }
+
+        & .form__input.phonenumber {
+            color: $phone-big-disable-color;
+        }
+        & .form__element--button {
+
+            &.back:before {
+                opacity: .5;
+            }
+            &.backspace:before {
+                opacity: .5;
+            }
+        }
+
+        & .numpad {
+            color: $phone-big-disable-color;
+
+            & .numpad__container {
+                border-color: $phone-big-disable-color;
+            }
+        }
+    }
+}

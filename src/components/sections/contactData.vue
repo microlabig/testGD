@@ -4,7 +4,7 @@
         form.form            
           .form__wrapper    
             formControll(
-              @showBaseWrapper="$emit('showBaseWrapper')"
+              @showBaseWrapper="$emit('showBaseWrapper',currentUser.phoneNumber)"
               @saveUserData="$emit('saveCurrentUser', currentUserEdited)"
             )
             label.form__element
@@ -16,7 +16,7 @@
                 ).form__avatar-img
             div(
               v-for="(item, index) in userData" 
-              :key="item"
+              :key="index"
             ).form__element                     
               contactDataInput(                
                 :ph="inputPlaceholder[index]"
