@@ -22,28 +22,37 @@
                     ).contacts__image
                 .contacts__description
                   .contacts__name {{user.name}} {{user.lastName}}
-                  .contacts__number {{user.phoneNumber}}
+                  .contacts__number {{`${formatingPhoneNumber(user.phoneNumber)}`}}
                 .contacts__information
                   .contacts__information-box    
 </template>
 
 <script>
-import searchComponent from "../parts/search";
-import horizontalLine from "../parts/horizontalLine";
+  import searchComponent from "../parts/search";
+  import horizontalLine from "../parts/horizontalLine";
+  import { transformPhoneNumber } from '../../helpers/transform.js'; 
 
-export default {
-  components: {
-    searchComponent,
-    horizontalLine
-  },
-  props: {
-    usersSearching: Array
-  },
-  methods: {
-    errorLoadingImage(e,user) { // в случае ошибки загрузки аватарки
-      e.target.src = './images/contact.jpg';
-      user.userpic = e.target.src;
+  export default {
+    components: {
+      searchComponent,
+      horizontalLine
+    },
+
+    props: {
+      usersSearching: Array
+    },
+
+    methods: {
+      // в случае ошибки загрузки аватарки
+      errorLoadingImage(e,user) { 
+        e.target.src = './images/contact.jpg';
+        user.userpic = e.target.src;
+      },
+
+      // форматируем номер телефона
+      formatingPhoneNumber(number) {
+        return transformPhoneNumber(number);
+      }
     }
-  }
-};
+  };
 </script>

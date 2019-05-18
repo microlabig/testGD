@@ -4,11 +4,11 @@
             v-if="showBaseWrapper"
         )
             navigation(
-                @showHistory="showHistory"
-                @showContacts="showContacts"
                 :showBaseContacts="showBaseContacts"
                 :showBaseHistory="showBaseHistory"
-            )  
+                @showHistory="showHistory"
+                @showContacts="showContacts"                
+            ) 
             contacts(                
                 v-if="showBaseWrapper && showBaseContacts"
                 :usersSearching="usersSearching"                 
@@ -51,12 +51,10 @@
     import controll from "./parts/controll";
     import controllPhoneBig from "./parts/controllPhoneBig";
 
-    import {mapActions} from 'vuex';
-    import { sortArrayByName } from '../helpers/sort.js';
-
+    import { mapActions, mapGetters } from 'vuex';
+    import { sortArrayByName } from '../helpers/sort.js'; 
 
     export default {
-
         components: {
             navigation, contacts, history, controll, 
             contactData, 
@@ -81,36 +79,39 @@
             }
         },
 
-        created() {            
-            this.fetchUsers().then(data => this.users = [...data]);       
-        },        
+        async created() {    
+            await this.fetchUsers();  // прочитаем из JSON список контактов и запишем его в стор
+            this.users = this.getUsers; // сохраним в users
+        },
 
         computed: {
+            ...mapGetters("users", ["getUsers"]),
+
             // поиск в списке пользователей
             usersSearching() { 
                 let tempUsers = [],
                     str = this.searchStr.toLowerCase(),
-                    usersStr = '';
-
-                sortArrayByName(this.users);  
-
+                    usersStr = '';                
+                // отсортируем по имени
+                sortArrayByName(this.users); 
+                // найдем совпадения
                 for (let i = 0; i < this.users.length; i++) {
-                    usersStr = this.users[i].name.toLowerCase();
+                    usersStr = this.users[i].name.toLowerCase(); // по имени
                     if (usersStr.indexOf(str) !== -1) {
                         tempUsers.push(this.users[i]);
                         continue;
                     }
-                    usersStr = this.users[i].lastName.toLowerCase();
+                    usersStr = this.users[i].lastName.toLowerCase(); // по фамилии
                     if (usersStr.indexOf(str) !== -1) {
                         tempUsers.push(this.users[i]);
                         continue;
                     }
-                    usersStr = this.users[i].phoneNumber.toLowerCase();
+                    usersStr = this.users[i].phoneNumber.toLowerCase(); // по номеру телефона
                     if (usersStr.indexOf(str) !== -1) {
                         tempUsers.push(this.users[i]);
                         continue;
                     }
-                }
+                }                  
                 return tempUsers;
             },
 

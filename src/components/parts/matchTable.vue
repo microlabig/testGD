@@ -16,15 +16,24 @@
                                 ).contacts__image
                         .contacts__description
                             .contacts__name {{contact.name}} {{contact.lastName}}
-                            .contacts__number {{contact.phoneNumber}}
+                            .contacts__number {{`${formatingPhoneNumber(contact.phoneNumber)}`}}
                         .contacts__information
                             .contacts__information-box            
 </template>
 
 <script>
-export default {
-    props: {
-        userSearching: Array
+    import { transformPhoneNumber } from '../../helpers/transform.js'; 
+
+    export default {
+        props: {
+            userSearching: Array
+        },
+        
+        methods: {
+            // форматируем номер телефона
+            formatingPhoneNumber(number) {
+            return transformPhoneNumber(number);
+            }
+        }
     }
-}
 </script>

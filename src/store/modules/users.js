@@ -22,10 +22,10 @@ const users = {
 
     actions: {
         // чтение списка контактов из JSON
-        fetchUsers({commit}) {      
+        async fetchUsers({commit}) {      
             let data = [];
             try {
-                data = require("../../data/users.json");
+                data = await require("../../data/users.json");                 
                 commit('SET_USERS', data);                 
                 return data;
             } catch (error) {
