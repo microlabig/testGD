@@ -30,7 +30,9 @@
 <script>
   import searchComponent from "../parts/search";
   import horizontalLine from "../parts/horizontalLine";
+  
   import { transformPhoneNumber } from '../../helpers/transform.js'; 
+  import { defaultURLPicture } from "../../helpers/urls";
 
   export default {
     components: {
@@ -45,7 +47,7 @@
     methods: {
       // в случае ошибки загрузки аватарки
       errorLoadingImage(e,user) { 
-        e.target.src = './images/avatar/contact.jpg';
+        e.target.src = defaultURLPicture;
         user.userpic = e.target.src;
       },
 

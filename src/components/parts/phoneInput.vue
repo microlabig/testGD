@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { transformPhoneNumber } from '../../helpers/transform.js';
+import { transformPhoneNumber } from '../../helpers/transform';
 
 export default {
     props: {

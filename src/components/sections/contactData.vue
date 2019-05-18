@@ -37,6 +37,8 @@ import chartComponent from "../parts/chart";
 import controllPhone from "../parts/controllPhone";
 import contactDataInput from "../parts/contactDataInput";
 
+import { defaultURLPicture } from "../../helpers/urls";
+
 export default {
 
     components: {
@@ -94,7 +96,7 @@ export default {
       },
 
       errorLoadingImage(e) {        
-        e.target.src = "./images/contact.jpg";        
+        e.target.src = defaultURLPicture;        
       }
     }
 }

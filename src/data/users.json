@@ -53,7 +53,7 @@
         "lastName": "Auilizzoni",
         "phoneNumber": "+96437851216",
         "dateOfBirth": "10/30/1990",
-        "userpic": "./images/contact.jpg",
+        "userpic": "https://raw.githubusercontent.com/microlabig/img/master/userpic.jpg",
         "incoming": "3",
         "incomingTime": "10",
         "outgoing": "2",
