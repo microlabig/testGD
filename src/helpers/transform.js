@@ -30,6 +30,10 @@ export const transformPhoneNumber = (number) => {
 
 // обратное преобразование номера вида "+A (BCD) EFG-HJ-IK" в "+ABCDEFGHJIK"
 export const backTransformPhoneNumber = (number) => {
-    let str = number;
+    const pattern = /[\+\d]/gim;
+
+    if (number.length > 4) 
+        return number.match(pattern).join('');
     
+    return number;
 };

@@ -6,7 +6,6 @@
                 placeholder="Please type a number..."
                 :value="phoneNumberFormated"   
                 @input="$emit('input', $event.target.value)"
-                @change="changedInput"
             ).form__input.phonenumber     
         label(
             :class="{'hidden': inputIsEmpty}"   
@@ -25,19 +24,9 @@ export default {
         phoneNumber: String,
         inputIsEmpty: Boolean
     },
-    data() {
-        return {
-
-        }
-    },
     computed: {
         phoneNumberFormated() {
             return transformPhoneNumber(this.phoneNumber);
-        }
-    },
-    methods: {
-        changedInput() {
-            
         }
     }
 }

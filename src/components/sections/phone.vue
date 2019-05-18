@@ -23,7 +23,6 @@
                 @deleteLastSymbolInPhoneNumber="deleteLastSymbolInPhoneNumber"                
             )
             horizontalLine
-            pre {{phoneNumber}}
             numpad(
                 @numpadClicked="numpadClicked"
             )
@@ -46,6 +45,7 @@
     import numpad from "../parts/numpad";
 
     import { sortArrayByName } from '../../helpers/sort.js';
+    import { backTransformPhoneNumber } from '../../helpers/transform.js';
 
     export default {
 
@@ -166,8 +166,8 @@
                 this.$emit('saveCallInHistory', this.phoneNumber, this.contactsId);            
             },
 
-            customInput() {
-
+            customInput(val) {
+                this.phoneNumber = backTransformPhoneNumber(val);
             }
         }
     }
