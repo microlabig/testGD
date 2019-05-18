@@ -15,21 +15,15 @@
                 :userSearching="userSearching"
                 @userChange="userChange"
             )
-            .form__row
-              label.form__element
-                input(
-                    type="text" 
-                    placeholder="Please type a number..."
-                    v-model="phoneNumber"
-                ).form__input.phonenumber
-              label(
-                  :class="{'hidden': inputIsEmpty}"   
-              ).form__element.form__element--button.backspace
-                button(
-                    @click.prevent="deleteLastSymbolInPhoneNumber"
-                    type="button"
-                ).form__button
-            horizontalLine   
+            phoneInput(
+                @input="customInput"
+                v-model="phoneNumber"
+                :phoneNumber="phoneNumber"
+                :inputIsEmpty="inputIsEmpty"
+                @deleteLastSymbolInPhoneNumber="deleteLastSymbolInPhoneNumber"                
+            )
+            horizontalLine
+            pre {{phoneNumber}}
             numpad(
                 @numpadClicked="numpadClicked"
             )
@@ -47,6 +41,7 @@
     import formControllPhone from "../parts/formControllPhone";
     import controllPhoneBig from "../parts/controllPhoneBig";
     import matchTable from "../parts/matchTable";
+    import phoneInput from "../parts/phoneInput";
     import horizontalLine from "../parts/horizontalLine";
     import numpad from "../parts/numpad";
 
@@ -58,6 +53,7 @@
             formControllPhone,
             controllPhoneBig,
             matchTable,
+            phoneInput,
             horizontalLine,
             numpad
         },
@@ -168,6 +164,10 @@
                 }, this.callTime);                 
 
                 this.$emit('saveCallInHistory', this.phoneNumber, this.contactsId);            
+            },
+
+            customInput() {
+
             }
         }
     }
