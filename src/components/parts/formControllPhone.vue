@@ -6,11 +6,11 @@
                 @click.prevent="!is_calling ? $emit('showBaseWrapper') : true"
             ).form__button
         label(
-            :class="{'disable':is_calling || inputIsEmpty || lengthUserSearching!==0}"
+            :class="{'disable':is_calling || inputIsEmpty || phoneNumberIsFounded}"
         ).form__element.form__element--button.save
             button(
                 type="button"                
-                :disabled="inputIsEmpty || lengthUserSearching!==0"
+                :disabled="is_calling || inputIsEmpty || phoneNumberIsFounded"
                 @click.prevent="!is_calling ? $emit('saveUserData') : true"
             ).form__button 
 </template>
@@ -19,8 +19,8 @@
     export default {
         props: {
             inputIsEmpty: Boolean,
-            lengthUserSearching: Number,
-            is_calling: Boolean
+            is_calling: Boolean,
+            phoneNumberIsFounded: Boolean
         }
     }
 </script>

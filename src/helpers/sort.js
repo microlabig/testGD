@@ -10,3 +10,5 @@ export const sortArrayByName = arr => {
         });
     }
 }
+
+//TODO: сделать сортировку по кол-ву звонков и дате звонков
