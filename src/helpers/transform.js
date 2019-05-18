@@ -1,4 +1,4 @@
-// преобразование номера вида +ABCDEFGHJIK в 
+// преобразование номера вида "+ABCDEFGHJIK" в "+A (BCD) EFG-HJ-IK"
 export const transformPhoneNumber = (number) => {
     let str = number;
     if (number.length > 4) {
@@ -26,4 +26,10 @@ export const transformPhoneNumber = (number) => {
         str = tempArr.join('');        
     }
     return str;
+};
+
+// обратное преобразование номера вида "+A (BCD) EFG-HJ-IK" в "+ABCDEFGHJIK"
+export const backTransformPhoneNumber = (number) => {
+    let str = number;
+    
 };

@@ -82,6 +82,8 @@
         async created() {    
             await this.fetchUsers();  // прочитаем из JSON список контактов и запишем его в стор
             this.users = this.getUsers; // сохраним в users
+            let p = "+7 (994) 876-32-45"
+            
         },
 
         computed: {

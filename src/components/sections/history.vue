@@ -29,7 +29,7 @@
                     )
                 .contacts__description
                   .contacts__name {{user.name}} {{user.lastName}}
-                  .contacts__number {{user.phoneNumber}}
+                  .contacts__number {{`${formatingPhoneNumber(user.phoneNumber)}`}}
                 .contacts__date
                   .contacts__day {{user.incoming}}
                   .contacts__year at 12:10PM 
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { transformPhoneNumber } from '../../helpers/transform.js'; 
 
 var parentUL = {}, // UL - родитель
     movedLI = {}, // перемещаемый объект li-шка
@@ -269,6 +270,11 @@ export default {
       if (lastLI.classList.contains('is_found--under')) lastLI.classList.remove("is_found--under");
 
       this.$emit('itemMoved',this.historyArray);
+    },
+
+    // форматируем номер телефона
+    formatingPhoneNumber(number) {
+      return transformPhoneNumber(number);
     }
   }
 };

@@ -45,7 +45,7 @@
     methods: {
       // в случае ошибки загрузки аватарки
       errorLoadingImage(e,user) { 
-        e.target.src = './images/contact.jpg';
+        e.target.src = './images/avatar/contact.jpg';
         user.userpic = e.target.src;
       },
 
