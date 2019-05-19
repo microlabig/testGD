@@ -18,13 +18,15 @@
               v-for="(item, index) in userData" 
               :key="index"
             ).form__element                     
-              contactDataInput(                
+              contactDataInput(
+                :phone="currentUser.phoneNumber"
                 :ph="inputPlaceholder[index]"
                 :item="item"
                 :index="index"
                 v-model="val"
                 @input="customInput"
-              )                       
+              )
+            pre {{currentUserEdited.phoneNumber}}
             chartComponent
         controllPhone(
           @showPhone="$emit('showPhone')"
@@ -38,6 +40,7 @@ import controllPhone from "../parts/controllPhone";
 import contactDataInput from "../parts/contactDataInput";
 
 import { defaultURLPicture } from "../../helpers/urls";
+import { backTransformPhoneNumber } from '../../helpers/transform.js';
 
 export default {
 
@@ -67,7 +70,7 @@ export default {
         ph: "", // placeholder
         val: "", // значение из custom input
 
-        currentUserEdited: {
+        currentUserEdited: { // для сохранения пользователя
           id: this.currentUser.id,
           name: this.currentUser.name, 
           lastName: this.currentUser.lastName, 
@@ -77,7 +80,13 @@ export default {
       }
     },
 
-    methods: {
+    methods: {     
+      // форматируем номер телефона
+      formatingPhoneNumber(number) {
+          return transformPhoneNumber(number);
+      },
+        
+      // соотношение индекса и значения для каждого customInput
       customInput(value, index) {
         switch (index) {
           case 0:  // name  
@@ -86,8 +95,9 @@ export default {
           case 1:  // lastName  
             this.currentUserEdited.lastName = value;
             break;
-          case 2:  // phoneNumber
-            this.currentUserEdited.phoneNumber = value;
+          case 2:  // phoneNumber            
+            this.userData[2] = backTransformPhoneNumber(value);
+            this.currentUserEdited.phoneNumber = backTransformPhoneNumber(value);
             break;
           case 3:  // dateOfBirth  
             this.currentUserEdited.dateOfBirth = value;

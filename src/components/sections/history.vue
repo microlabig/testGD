@@ -9,7 +9,7 @@
             @drop="drop"
           ).contacts__list
             li(
-              v-for="user in historyArrayChanged"
+              v-for="user in historyArrayEdited"
               :key="user.historyID"              
             ).contacts__item
               .contact__dropzone
@@ -69,7 +69,7 @@ export default {
 
   computed: {
     // добавим поле historyID 
-    historyArrayChanged() {
+    historyArrayEdited() {
       let c = 0;
       this.historyArray.forEach( item => {
         item.historyID = c;
