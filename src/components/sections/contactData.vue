@@ -64,7 +64,8 @@ export default {
         return Validator.value(value).required("The field must not be empty!");
       },
       'currentUserEdited.dateOfBirth'(value) {
-        return Validator.value(value).required("The field must not be empty!");
+        const patternDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/([0-9]{4})$/g; // mm/dd/yyyy
+        return Validator.value(value).required("The field must not be empty!").regex(patternDate,'Date format must be mm/dd/yyyy');
       }
     },
 
@@ -130,10 +131,10 @@ export default {
             this.currentUserEdited.lastName = value;
             break;
           case 2:  // phoneNumber   
-            //this.userData[2] = backTransformPhoneNumber(value);
+            this.userData[2] = backTransformPhoneNumber(value);
             console.log(value);
             
-            this.currentUserEdited.phoneNumber = value;
+            this.currentUserEdited.phoneNumber = backTransformPhoneNumber(value);
             break;
           case 3:  // dateOfBirth  
             this.currentUserEdited.dateOfBirth = value;
