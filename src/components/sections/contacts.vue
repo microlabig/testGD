@@ -30,7 +30,7 @@
 <script>
   import searchComponent from "../parts/search";
   import horizontalLine from "../parts/horizontalLine";
-  
+
   import { transformPhoneNumber } from '../../helpers/transform.js'; 
   import { defaultURLPicture } from "../../helpers/urls";
 

@@ -77,7 +77,7 @@
             // то передать его в phoneNumber
             if (this.phoneCurrentUser !== undefined ) this.phoneNumber = this.phoneCurrentUser; 
             // считаем список всех пользователей для поиска по номеру телефона
-            this.contacts = this.getUsers;         
+            this.contacts = this.getUsers; 
         },
 
         computed: {
@@ -94,7 +94,7 @@
                 let tempUsers = [],                    
                     str = this.phoneNumber.toLowerCase(),
                     usersStr = '';
-
+                
                 sortArrayByName(this.contacts);
 
                 if (!this.inputIsEmpty) {
@@ -144,6 +144,8 @@
 
             // обработка клика по пользователю из списка в таблице совпадений и запоминание его ID и phoneNumber
             userChange(userID) {
+                console.log(userID);
+                
                 this.contactsId = userID;
                 this.contacts.forEach(contact => {
                     if (contact.id === userID) {
@@ -161,8 +163,17 @@
 
                 setTimeout(()=> {
                     this.is_calling = false;
-                }, this.callTime);                 
-
+                }, this.callTime);
+                
+                // определим есть ли пользователь с номером phoneNumber
+                for (let i=0; i<users.length; i++) {                    
+                    if (this.phoneNumber === users[i].phoneNumber) { // если есть, сохранить его ID
+                        this.contactsId = users[i].id;
+                        break;
+                    }
+                }
+                
+                // передадим в историю вызовов
                 this.$emit('saveCallInHistory', this.phoneNumber, this.contactsId);            
             },
 

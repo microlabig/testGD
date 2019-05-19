@@ -204,6 +204,7 @@
                 });
                 
                 if (!is_UserExistence) { // если пользователя нет в списке - создать нового пользователя
+                    this.currentUser.id = this.getMaxIdUsers + 1;
                     this.users.push(this.currentUser);
                     this.addNewUser(this.currentUser);
                 } else // иначе отредактировать текущего
@@ -221,7 +222,7 @@
             // сохраним историю звонков
             saveCallInHistory(number, id) {
                 let is_ExistedUser = false;
-
+                
                 this.users.forEach(user => {
                     if (user.id === id && user.phoneNumber === number) {
                         // TODO: добавить время вызова

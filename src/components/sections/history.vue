@@ -9,8 +9,8 @@
             @drop="drop"
           ).contacts__list
             li(
-              v-for="user in historyUsersCalls"
-              :key="user.id"              
+              v-for="user in historyArrayChanged"
+              :key="user.historyID"              
             ).contacts__item
               .contact__dropzone
               .contacts__row
@@ -63,8 +63,19 @@ export default {
 
   data() {    
     return {
-      //historyUsersCalls: [] // история звонков пользователям
       historyArray: []
+    }
+  },
+
+  computed: {
+    // добавим поле historyID 
+    historyArrayChanged() {
+      let c = 0;
+      this.historyArray.forEach( item => {
+        item.historyID = c;
+        c++;
+      });
+      return this.historyArray;
     }
   },
 
