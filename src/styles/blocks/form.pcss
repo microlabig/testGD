@@ -10,7 +10,34 @@
 
     &:last-child {
         margin-bottom: 0;
-    }    
+    }
+
+    &.form__element--data {
+        position: relative;
+        &.is_not_validate {
+            border-color: red;
+
+            & .form__input-error {
+                opacity: 1;
+            }
+        }
+    }
+    transition: border-color .3s;
+}
+
+.form__input-error {
+    opacity: 0;
+    position: absolute;
+    top: 110%;
+    color: red;
+    font-size: 12px;
+
+    transition: opacity .3s;
+}
+
+.form__avatar-wrapper {
+    //border: 3px solid $text-color;
+    margin-bottom: 20px; //5%
 }
 
 .form__avatar {  

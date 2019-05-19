@@ -40,7 +40,7 @@
         data() {
             return {
                 number: [],
-                clicksTime: 300
+                clicksTime: 250
             }
         },        
         methods: {

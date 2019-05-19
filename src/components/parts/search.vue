@@ -1,6 +1,7 @@
 <template lang="pug">
     .search
         input(
+            autofocus
             type="text" 
             placeholder="live search in names and phone"
             v-model="searchStr"

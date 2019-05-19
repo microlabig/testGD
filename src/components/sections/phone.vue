@@ -7,6 +7,7 @@
                 :inputIsEmpty="inputIsEmpty"
                 :is_calling="is_calling"
                 :phoneNumberIsFounded="phoneNumberIsFounded"
+                :is_ValidPhone="is_ValidPhone"
                 @showBaseWrapper="$emit('showBaseWrapper')"
                 @saveUserData="$emit('saveNewUserData',phoneNumber)"
             )
@@ -15,12 +16,12 @@
                 :userSearching="userSearching"
                 @userChange="userChange"
             )
-            phoneInput(
-                @input="customInput"
+            phoneInput(                
                 v-model="phoneNumber"
                 :phoneNumber="phoneNumber"
                 :inputIsEmpty="inputIsEmpty"
-                @deleteLastSymbolInPhoneNumber="deleteLastSymbolInPhoneNumber"                
+                @deleteLastSymbolInPhoneNumber="deleteLastSymbolInPhoneNumber"   
+                @input="customInput"             
             )
             horizontalLine
             numpad(
@@ -45,7 +46,7 @@
     import numpad from "../parts/numpad";
 
     import { sortArrayByName } from '../../helpers/sort.js';
-    import { backTransformPhoneNumber } from '../../helpers/transform.js';
+    import { transformPhoneNumber, backTransformPhoneNumber } from '../../helpers/transform.js';
 
     export default {
 
@@ -65,7 +66,8 @@
         data() {
             return {
                 phoneNumber: "", // строка с вводимым номером телефона
-                is_calling: false, // произведен звонокб
+                is_calling: false, // произведен звонок
+                is_ValidPhone: false, 
                 callTime: 5000, // время вызова
                 contacts: "", // список всех контактов
                 contactsId: -1 // ID текущего контакта
@@ -75,9 +77,13 @@
         created() {
             // если номер телефона определен (напр., на данный экран зашли через кнопку numpad из основного экрана)
             // то передать его в phoneNumber
-            if (this.phoneCurrentUser !== undefined ) this.phoneNumber = this.phoneCurrentUser; 
-            // считаем список всех пользователей для поиска по номеру телефона
+            if (this.phoneCurrentUser !== undefined ) {
+                this.phoneNumber = this.phoneCurrentUser; 
+                this.is_ValidPhone = true;
+            }
+            // считаем список всех пользователей для поиска по номеру телефона            
             this.contacts = this.getUsers; 
+            
         },
 
         computed: {
@@ -85,21 +91,21 @@
             ...mapGetters("users", ["getUsers"]),
 
             // определение пустого поля ввода номера телефона
-            inputIsEmpty() {                                
+            inputIsEmpty() {      
                 return (this.phoneNumber.length > 0) ? false : true;
             },
 
             // поиск контактов по номеру телефона из поля ввода данного номера телефона
             userSearching() {
                 let tempUsers = [],                    
-                    str = this.phoneNumber.toLowerCase(),
+                    str = this.phoneNumber,
                     usersStr = '';
                 
                 sortArrayByName(this.contacts);
 
                 if (!this.inputIsEmpty) {
                     for (let i = 0; i < this.contacts.length; i++) {                    
-                        usersStr = this.contacts[i].phoneNumber.toLowerCase();
+                        usersStr = this.contacts[i].phoneNumber;
                         if (usersStr.indexOf(str) !== -1) {
                             tempUsers.push(this.contacts[i]);
                             continue;
@@ -132,8 +138,10 @@
             deleteLastSymbolInPhoneNumber() {  
                 if (!this.is_calling) {
                     let str = '';                
-                    str = this.phoneNumber.substring(0, this.phoneNumber.length - 1);                
+                    str = backTransformPhoneNumber(transformPhoneNumber(this.phoneNumber.substring(0, this.phoneNumber.length - 1)));                
                     this.phoneNumber = str;
+                    console.log(this.phoneNumber);
+                    
                 }
             },
             
@@ -143,9 +151,7 @@
             },
 
             // обработка клика по пользователю из списка в таблице совпадений и запоминание его ID и phoneNumber
-            userChange(userID) {
-                console.log(userID);
-                
+            userChange(userID) {                
                 this.contactsId = userID;
                 this.contacts.forEach(contact => {
                     if (contact.id === userID) {
@@ -178,7 +184,14 @@
             },
 
             customInput(val) {
-                this.phoneNumber = backTransformPhoneNumber(val);
+                const patternMultyplyOrHash = /[\*\#]/g;
+                if (this.phoneNumber !== "") 
+                    if (this.phoneNumber.match(patternMultyplyOrHash) !== null) 
+                        this.is_ValidPhone = false;
+                    else 
+                        this.is_ValidPhone = true;
+
+                this.phoneNumber = backTransformPhoneNumber(val);                
             }
         }
     }
