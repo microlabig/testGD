@@ -183,6 +183,7 @@
                 this.$emit('saveCallInHistory', this.phoneNumber, this.contactsId);            
             },
 
+            // обработка данных на customInput 
             customInput(val) {
                 const patternMultyplyOrHash = /[\*\#]/g;
                 if (this.phoneNumber !== "") 

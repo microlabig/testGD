@@ -52,7 +52,7 @@
     import controllPhoneBig from "./parts/controllPhoneBig";
 
     import { mapActions, mapGetters } from 'vuex';
-    import { sortArrayByName } from '../helpers/sort.js'; 
+    import { sortArrayByName, sortArrayByCallDateTime } from '../helpers/sort.js'; 
 
     export default {
         components: {
@@ -81,9 +81,25 @@
 
         async created() {    
             await this.fetchUsers();  // прочитаем из JSON список контактов и запишем его в стор
-            this.users = this.getUsers; // сохраним в users
-            let p = "+7 (994) 876-32-45"
-            
+            this.users = this.getUsers; // сохраним в users         
+
+            // заполним массив историей всех вызовов
+           let historyID = 0;
+            this.users.forEach( item => {
+                if (item.outgoing) // если в контакте есть поле outgoing (исходящие вызовы)
+                    if (item.outgoing.length > 0) { // и оно не пустое
+                        // заполним массив historyUsersCalls
+                        item.outgoing.forEach( callObj => {
+                            const contact = {...item}; // возьмем все поля из текущего пользователя
+                            contact.historyID = historyID; // добавим поле historyID                            
+                            contact.callDateTimeQuantity = callObj; // добавим поле времени вызова - callDateTime
+                            this.historyUsersCalls.push(contact); // добавим сформированный контакт в историю всех вызовов
+                            historyID++; // увеличим historyID 
+                        });                        
+                    }
+            });
+
+            sortArrayByCallDateTime(this.historyUsersCalls);
         },
 
         computed: {
@@ -222,7 +238,11 @@
             // сохраним историю звонков
             saveCallInHistory(number, id) {
                 let is_ExistedUser = false;
+
+                let callDate = new Date();
+                console.log(callDate);
                 
+                // поиск пользователя в списке 
                 this.users.forEach(user => {
                     if (user.id === id && user.phoneNumber === number) {
                         // TODO: добавить время вызова
@@ -230,12 +250,14 @@
                         is_ExistedUser = true;                        
                     }                    
                 });
+
+                // если не существует пользователя 
                 if (!is_ExistedUser) {
                     const user = {};
                     user.id = -1;
-                    user.name="Unknown"
-                    user.lastName="Unknown"
-                    user.phoneNumber=number;
+                    user.name = "Unknown";
+                    user.lastName = "Unknown";
+                    user.phoneNumber = number;
                     this.historyUsersCalls.push(user);
                 }               
             },

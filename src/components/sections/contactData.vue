@@ -30,7 +30,6 @@
                   @input="customInput"
                 )
                 .form__input-error {{errorValidation}}
-            pre {{currentUserEdited}}
             chartComponent
         controllPhone(
           @showPhone="$emit('showPhone')"
@@ -65,7 +64,7 @@ export default {
       },
       'currentUserEdited.dateOfBirth'(value) {
         const patternDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/([0-9]{4})$/g; // mm/dd/yyyy
-        return Validator.value(value).required("The field must not be empty!").regex(patternDate,'Date format must be mm/dd/yyyy');
+        return Validator.value(value).required("The field must not be empty!").regex(patternDate,'Date format must be valid mm/dd/yyyy');
       }
     },
 

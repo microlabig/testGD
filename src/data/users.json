@@ -5,11 +5,25 @@
         "lastName": "Brown",
         "phoneNumber": "+78503849576",
         "dateOfBirth": "10/30/1991",
-        "userpic": "https://st2.depositphotos.com/4071389/7049/i/950/depositphotos_70495135-stock-photo-attractive-man-smiling.jpg",
-        "incoming": "3",
-        "incomingTime": "10",
-        "outgoing": "2",
-        "outgoingTime": "4"
+        "userpic": "https://st2.depositphotos.com/4071389/7049/i/950/depositphotos_70495135-stock-photo-attractive-man-smiling.jpg",        
+        "outgoing": [
+            {
+                "quantity": "3",
+                "dateTime": "2010-05-01T12:58:50Z"
+            },
+            {
+                "quantity": "4",
+                "dateTime": "2012-01-26T13:51:50Z"
+            },
+            {
+                "quantity": "7",
+                "dateTime": "2018-11-15T14:49:00Z"
+            },
+            {
+                "quantity": "7",
+                "dateTime": "2019-03-25T14:39:00Z"
+            }
+        ]     
     },
     {
         "id": 1,
@@ -18,10 +32,24 @@
         "phoneNumber": "+15649785143",
         "dateOfBirth": "10/30/1991",
         "userpic": "https://image.freepik.com/free-photo/_1187-2930.jpg",
-        "incoming": "3",
-        "incomingTime": "10",
-        "outgoing": "2",
-        "outgoingTime": "4"
+        "outgoing": [
+            {
+                "quantity": "30",
+                "dateTime": "2019-03-14T19:52:40Z"
+            },
+            {
+                "quantity": "17",
+                "dateTime": "2007-08-07T03:01:19Z"
+            },
+            {
+                "quantity": "18",
+                "dateTime": "2012-01-23T14:58:01Z"
+            },
+            {
+                "quantity": "10",
+                "dateTime": "2019-03-17T12:38:11Z"
+            }
+        ] 
     },
     {
         "id": 2,
@@ -30,10 +58,12 @@
         "phoneNumber": "+79948763254",
         "dateOfBirth": "10/30/1991",
         "userpic": "http://newcorediary.com/wp-content/uploads/HLIC/7c692f3399cd3a622b11dfd4df45942b.jpg",
-        "incoming": "3",
-        "incomingTime": "10",
-        "outgoing": "2",
-        "outgoingTime": "4"
+        "outgoing": [
+            {
+                "quantity": "80",
+                "dateTime": "2012-01-26T13:51:50Z"
+            }
+        ] 
     },
     {
         "id": 3,
@@ -42,10 +72,44 @@
         "phoneNumber": "+79485164385",
         "dateOfBirth": "10/30/1991",
         "userpic": "https://memepedia.ru/wp-content/uploads/2017/09/1a5.jpg",
-        "incoming": "3",
-        "incomingTime": "10",
-        "outgoing": "2",
-        "outgoingTime": "4"
+        "outgoing": [
+            {
+                "quantity": "10",
+                "dateTime": "2010-04-16T10:50:50Z"
+            },
+            {
+                "quantity": "41",
+                "dateTime": "2002-10-25T02:02:01Z"
+            },
+            {
+                "quantity": "70",
+                "dateTime": "2019-05-20T03:17:12Z"
+            },
+            {
+                "quantity": "32",
+                "dateTime": "2019-02-22T17:10:11Z"
+            },
+            {
+                "quantity": "14",
+                "dateTime": "2018-05-24T00:10:11Z"
+            },
+            {
+                "quantity": "27",
+                "dateTime": "2019-01-01T00:00:00Z"
+            },
+            {
+                "quantity": "8",
+                "dateTime": "2017-07-19T15:16:17Z"
+            },
+            {
+                "quantity": "4",
+                "dateTime": "2018-09-20T17:40:12Z"
+            },
+            {
+                "quantity": "5",
+                "dateTime": "2019-05-20T10:45:10Z"
+            }
+        ] 
     },
     {
         "id": 4,
@@ -54,10 +118,7 @@
         "phoneNumber": "+96437851216",
         "dateOfBirth": "10/30/1990",
         "userpic": "https://raw.githubusercontent.com/microlabig/img/master/userpic.jpg",
-        "incoming": "3",
-        "incomingTime": "10",
-        "outgoing": "2",
-        "outgoingTime": "4"
+        "outgoing": [] 
     },
     {
         "id": 5,
@@ -66,10 +127,20 @@
         "phoneNumber": "+96437851217",
         "dateOfBirth": "02/24/1955",
         "userpic": "https://www.iphones.ru/wp-content/uploads/2011/02/steve-jobs-smile.jpg",
-        "incoming": "3",
-        "incomingTime": "10",
-        "outgoing": "2",
-        "outgoingTime": "4"
+        "outgoing": [
+            {
+                "quantity": "8",
+                "dateTime": "2019-04-10T01:12:18Z"
+            },
+            {
+                "quantity": "18",
+                "dateTime": "2018-05-10T01:22:18Z"
+            },
+            {
+                "quantity": "2",
+                "dateTime": "2019-02-01T11:20:19Z"
+            }
+        ] 
     },
     {
         "id": 6,
@@ -77,10 +148,6 @@
         "lastName": "Line",
         "phoneNumber": "1234",
         "dateOfBirth": "02/24/1955",
-        "userpic": "https://s3.amazonaws.com/media.muckrack.com/profile/images/1343612/kindle-fire-support-number.jpg.256x256_q100_crop-smart.jpg",
-        "incoming": "3",
-        "incomingTime": "10",
-        "outgoing": "2",
-        "outgoingTime": "4"
+        "userpic": "https://s3.amazonaws.com/media.muckrack.com/profile/images/1343612/kindle-fire-support-number.jpg.256x256_q100_crop-smart.jpg"        
     }
 ]
