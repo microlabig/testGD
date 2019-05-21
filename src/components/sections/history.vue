@@ -15,7 +15,11 @@
             ).contacts__item
               .contact__dropzone
               .contacts__row
-                .contacts__hamburger
+                .contacts__hamburger(
+                  @touchmove.prevent.stop
+                  @scroll.prevent.stop
+                  @mousewheel.prevent.stop
+                )
                   .contacts__hamburger-icon(
                     draggable="true"
                     @dragstart="dragStart"
@@ -32,8 +36,8 @@
                   .contacts__name {{user.name}} {{user.lastName}}
                   .contacts__number {{`${formatingPhoneNumber(user.phoneNumber)}`}}
                 .contacts__date
-                  .contacts__day {{user.firstValue}}
-                  .contacts__year {{user.secondValue}}
+                  .contacts__day {{user.additionalInformation[0]}}
+                  .contacts__year {{user.additionalInformation[1]}}
               .contact__dropzone--under           
             
 </template>

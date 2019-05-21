@@ -230,42 +230,93 @@
                 this.searchStr = str;                               
             },
 
-            // сохраним историю звонков
+            // сохраним звонок в историю звонков
             saveCallInHistory(number, id) {
-                let is_ExistedUser = false;
+                let is_ExistedUser = false, // признак существования пользователя с такими же id и number
+                    user = {}, 
+                    currDate = new Date(), // текущая дата
+                    currDateStr = "", 
+                    monthStr = "", dayStr = "", hoursStr = "", minutesStr = "", secondsStr = "",
+                    month = 0, day = 0, hours = 0, minutes = 0, seconds = 0;
+
+                month = currDate.getMonth() + 1, // т.к. январь - 1, не 0!
+                day = currDate.getDate(),
+                hours = currDate.getHours(),
+                minutes = currDate.getMinutes(),
+                seconds = currDate.getSeconds();                    
+
+                // сформируем двузначные значения
+                monthStr = (month < 10) ? ("0" + month) : ("" + month);
+                dayStr = (day < 10) ? ("0" + day) : ("" + day);
+                hoursStr = (hours < 10) ? ("0" + hours) : ("" + hours);
+                minutesStr = (minutes < 10) ? ("0" + minutes) : ("" + minutes);
+                secondsStr = (seconds < 10) ? ("0" + seconds) : ("" + seconds);
+
+                // сформируем текущую дату в наш общий формат для истории звонков
+                currDateStr = "" + currDate.getFullYear() + "-" + monthStr + "-" + dayStr + "T" +
+                              hoursStr + ":" + minutesStr + ":" + secondsStr;
+
+                            //console.log('fd=',currDateStr,'\n',monthStr,dayStr,new Date(currDateStr).toLocaleDateString());
+                            
                 
                 // поиск пользователя в списке 
-                this.users.forEach(user => {
-                    if (user.id === id && user.phoneNumber === number) {
-                        this.historyUsersCalls.push(user);
-                        is_ExistedUser = true;                        
-                    }                    
-                });
+                for (let i = 0; i < this.users.length; i++) {                    
+                    const item = this.users[i];
+                    user = {};
+                    // если нашли пользователя с таким же id и номером телефона 
+                    if (item.id === id && item.phoneNumber === number) { 
 
-                // если не существует пользователя 
-                if (!is_ExistedUser) {
-                    let user = {}, 
-                        currDate = new Date(), // текущая дата
-                        strDate = "", monthStr = "", dayStr = "",
-                        hoursStr = "", minutesStr = "", secondsStr = "",
-                        month = currDate.getMonth() + 1, // т.к. январь - 1, не 0!
-                        day = currDate.getDate(),
-                        hours = currDate.getHours(),
-                        minutes = currDate.getMinutes(),
-                        seconds = currDate.getSeconds(),
-                        is_found = false, // пользователь уже есть в истории вызовов
+                        user = {...item}; 
+                        console.log(user.outgoing, item.outgoing);
+                        if (!user.callDateTimeQuantity) user.callDateTimeQuantity = {}; // если не существует поля callDateTimeQuantity
+                        user.callDateTimeQuantity.dateTime = currDateStr;     
+
+                        if (item.outgoing) { // если существует поле outgoing
+                            if (item.outgoing.length > 0) { // и оно не нулевое
+                                let is_foundIncoming = false; // признак найденной ранее даты вызова
+                               
+                                // переберем массив исходящих вызовов на поиск одинаковой даты
+                                for (let i = 0; i < item.outgoing.length; i++) {                                    
+                                    const itemDate = new Date(item.outgoing[i].dateTime); // дата вызова ранее
+                                    const itemDateStr = itemDate.toLocaleDateString(); 
+                                    const currDateStr = currDate.toLocaleDateString(); // текущая дата вызова
+                                    // сравним их, если равны                            
+                                    if (itemDateStr === currDateStr) {                                        
+                                        user.callDateTimeQuantity.quantity = parseInt(item.outgoing[i].quantity) + 1; // увеличить счетчик вызовов в этот день
+                                        user.outgoing[i].quantity = user.callDateTimeQuantity.quantity;
+                                        is_foundIncoming = true;
+                                        break;
+                                    }                                    
+                                }
+                                // если не нашли такой же даты в массиве исходящих вызовов outgoing равной текущей
+                                if (!is_foundIncoming) { 
+                                    user.callDateTimeQuantity.quantity = 1;
+                                    user.outgoing.push(user.callDateTimeQuantity);
+                                }
+
+                            } else {
+                                // если не нашли такой же даты в массиве исходящих вызовов outgoing равной текущей                               
+                                user.callDateTimeQuantity.quantity = 1;
+                                user.outgoing.push(user.callDateTimeQuantity);                                
+                            }                            
+                        } else {
+                            // если нет поля outgoing
+                            user.outgoing = [];
+                            user.callDateTimeQuantity.quantity = 1;
+                            user.outgoing.push(user.callDateTimeQuantity); 
+                        }
+                        // пометим, что пользователь существует
+                        is_ExistedUser = true;
+                        this.users[i].outgoing = user.outgoing;
+                        //TODO: поправить store тоже по id пользователя
+                        break;                        
+                    }
+                }
+
+                /* // если не существует пользователя 
+                if (!is_ExistedUser) {                       
+                    let is_found = false, // пользователь уже есть в истории вызовов
                         historyUserFounded = {}; // временная переменная для передачи данных пользователя
-
-                    // сформируем двузначные значения
-                    monthStr = (month < 10) ? ("0" + month) : ("" + month);
-                    dayStr = (day < 10) ? ("0" + day) : ("" + day);
-                    hoursStr = (hours < 10) ? ("0" + hours) : ("" + hours);
-                    minutesStr = (minutes < 10) ? ("0" + minutes) : ("" + minutes);
-                    secondsStr = (seconds < 10) ? ("0" + seconds) : ("" + seconds);
-
-                    // сформируем текущую дату в наш общий формат для истории звонков
-                    strDate = "" + currDate.getFullYear() + "-" + monthStr + "-" + dayStr + "T" +
-                               hoursStr + ":" + minutesStr + ":" + secondsStr + "Z";       
                         
                     // посмотрим, есть ли в истории вызовов такой же номер телефона как и текущий
                     for (let i = 0; i < this.historyUsersCalls.length; i++) {         
@@ -298,7 +349,7 @@
                         // если не нашли такой же даты в массиве исходящих вызовов outgoing равной текущей
                         if (!is_foundIncoming) { 
                             user.callDateTimeQuantity.quantity = 1;
-                            user.callDateTimeQuantity.dateTime = strDate; 
+                            user.callDateTimeQuantity.dateTime = currDateStr; 
                             user.outgoing.push(user.callDateTimeQuantity);
                         }
                     } else {
@@ -310,18 +361,19 @@
                         user.callDateTimeQuantity = {};
                         user.outgoing = [];
                         user.callDateTimeQuantity.quantity = 1;
-                        user.callDateTimeQuantity.dateTime = strDate;
+                        user.callDateTimeQuantity.dateTime = currDateStr;
                         user.outgoing.push(user.callDateTimeQuantity); 
                     }  
                     user.historyID = this.historyUsersCalls.length + 1;   
+                }          */      
+                // запишем сформированный объект user в список вызовов
+                this.historyUsersCalls.push(user);
+                // добавим дополнительные поля для отображения в списке 
+                this.historyUsersCalls = transformHistoryItems(this.historyUsersCalls);
+                console.log(user);
 
-                    // запишем сформированный объект user в список вызовов
-                    this.historyUsersCalls.push(user);
-                    // добавим дополнительные поля для отображения в списке 
-                    this.historyUsersCalls = transformHistoryItems(this.historyUsersCalls);
-                    // отсортируем по дате                    
-                    sortArrayByCallDateTime(this.historyUsersCalls);                    
-                }               
+                // отсортируем по дате                    
+                sortArrayByCallDateTime(this.historyUsersCalls);
             },
 
             // перемещение элементов в секции history
