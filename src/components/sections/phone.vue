@@ -46,7 +46,7 @@
     import numpad from "../parts/numpad";
 
     import { sortArrayByName } from '../../helpers/sort.js';
-    import { transformPhoneNumber, backTransformPhoneNumber } from '../../helpers/transform.js';
+    import { transformPhoneNumber, backTransformPhoneNumber } from '../../helpers/transform';
 
     export default {
 
@@ -68,7 +68,7 @@
                 phoneNumber: "", // строка с вводимым номером телефона
                 is_calling: false, // произведен звонок
                 is_ValidPhone: false, 
-                callTime: 5000, // время вызова
+                callTime: 100, // время вызова
                 contacts: "", // список всех контактов
                 contactsId: -1 // ID текущего контакта
             }
@@ -139,9 +139,7 @@
                 if (!this.is_calling) {
                     let str = '';                
                     str = backTransformPhoneNumber(transformPhoneNumber(this.phoneNumber.substring(0, this.phoneNumber.length - 1)));                
-                    this.phoneNumber = str;
-                    console.log(this.phoneNumber);
-                    
+                    this.phoneNumber = str;                    
                 }
             },
             

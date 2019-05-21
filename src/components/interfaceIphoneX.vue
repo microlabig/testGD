@@ -3,6 +3,7 @@
         .base-wrapper(
             v-if="showBaseWrapper"
         )
+            button(type="button" @click="clickButton")  2112e1
             navigation(
                 :showBaseContacts="showBaseContacts"
                 :showBaseHistory="showBaseHistory"
@@ -19,6 +20,7 @@
                 v-if="showBaseWrapper && showBaseHistory"
                 :historyUsersCalls="historyUsersCalls"
                 @itemMoved="itemMoved"
+                @historyItemClicked="user => {this.showContactInfo(user)}"
             )      
             controll(
                 @showPhone="showPhone"
@@ -52,7 +54,8 @@
     import controllPhoneBig from "./parts/controllPhoneBig";
 
     import { mapActions, mapGetters } from 'vuex';
-    import { sortArrayByName, sortArrayByCallDateTime } from '../helpers/sort.js'; 
+    import { sortArrayByName, sortArrayByCallDateTime } from '../helpers/sort';     
+    import { transformHistoryItems } from '../helpers/historyItems'; 
 
     export default {
         components: {
@@ -98,7 +101,7 @@
                         });                        
                     }
             });
-
+            // отсортируем по дате
             sortArrayByCallDateTime(this.historyUsersCalls);
         },
 
@@ -109,7 +112,7 @@
             usersSearching() { 
                 let tempUsers = [],
                     str = this.searchStr.toLowerCase(),
-                    usersStr = '';                
+                    usersStr = '';                    
                 // отсортируем по имени
                 sortArrayByName(this.users); 
                 // найдем совпадения
@@ -145,6 +148,10 @@
         methods: {
             ...mapActions('users', ['fetchUsers', 'saveCurrentEditedUser', 'addNewUser']),
 
+            clickButton() {
+                console.log(this.historyUsersCalls);
+            },
+
             showHistory() {
                 this.showBaseContacts = false;
                 this.showBaseHistory = true;
@@ -164,20 +171,9 @@
 
             // нажата кнопка "Назад" в информации о пользователе
             showBaseWrapperData(phoneNum) {
-                // FIXME: переделать историю переходов
                 this.showPhoneWrapper = false;
                 this.showContactData = false;
                 this.showBaseWrapper = true;
-                /*                 
-                if (this.is_FromBaseWrapper) { // если из главного компонента, то показать главный компонент
-                    this.showPhoneWrapper = false;
-                    this.showContactData = false;
-                    this.showBaseWrapper = true;
-                } else { // иначе показать компонент набора номера
-                    this.showContactData = false;
-                    this.showPhoneWrapper = true;
-                    this.phoneCurrentUser = phoneNum;
-                } */
             },
 
             showContactInfo(usr) {
@@ -206,7 +202,6 @@
             saveUser(userEdited) {
                 let is_UserExistence = false;
 
-                //TODO: валидация данных полей ввода
                 this.currentUser = {
                     ...this.currentUser,
                     ...userEdited
@@ -238,14 +233,10 @@
             // сохраним историю звонков
             saveCallInHistory(number, id) {
                 let is_ExistedUser = false;
-
-                let callDate = new Date();
-                console.log(callDate);
                 
                 // поиск пользователя в списке 
                 this.users.forEach(user => {
                     if (user.id === id && user.phoneNumber === number) {
-                        // TODO: добавить время вызова
                         this.historyUsersCalls.push(user);
                         is_ExistedUser = true;                        
                     }                    
@@ -253,15 +244,87 @@
 
                 // если не существует пользователя 
                 if (!is_ExistedUser) {
-                    const user = {};
-                    user.id = -1;
-                    user.name = "Unknown";
-                    user.lastName = "Unknown";
-                    user.phoneNumber = number;
+                    let user = {}, 
+                        currDate = new Date(), // текущая дата
+                        strDate = "", monthStr = "", dayStr = "",
+                        hoursStr = "", minutesStr = "", secondsStr = "",
+                        month = currDate.getMonth() + 1, // т.к. январь - 1, не 0!
+                        day = currDate.getDate(),
+                        hours = currDate.getHours(),
+                        minutes = currDate.getMinutes(),
+                        seconds = currDate.getSeconds(),
+                        is_found = false, // пользователь уже есть в истории вызовов
+                        historyUserFounded = {}; // временная переменная для передачи данных пользователя
+
+                    // сформируем двузначные значения
+                    monthStr = (month < 10) ? ("0" + month) : ("" + month);
+                    dayStr = (day < 10) ? ("0" + day) : ("" + day);
+                    hoursStr = (hours < 10) ? ("0" + hours) : ("" + hours);
+                    minutesStr = (minutes < 10) ? ("0" + minutes) : ("" + minutes);
+                    secondsStr = (seconds < 10) ? ("0" + seconds) : ("" + seconds);
+
+                    // сформируем текущую дату в наш общий формат для истории звонков
+                    strDate = "" + currDate.getFullYear() + "-" + monthStr + "-" + dayStr + "T" +
+                               hoursStr + ":" + minutesStr + ":" + secondsStr + "Z";       
+                        
+                    // посмотрим, есть ли в истории вызовов такой же номер телефона как и текущий
+                    for (let i = 0; i < this.historyUsersCalls.length; i++) {         
+                        // если нашли пользователя сохраненного в списке контактов, идем мимо
+                        if (this.historyUsersCalls[i].id !== -1) continue; 
+                        // если нашли пользователя уже с таким же номером телефона
+                        if (this.historyUsersCalls[i].phoneNumber === number) {
+                            is_found = true;
+                            historyUserFounded = this.historyUsersCalls[i]; // сохраним пользователя во временную переменную
+                            break;
+                        }
+                    }
+                    // если уже звонили по данному номеру, а пользователь не сохранен в списке контактов
+                    user.id = -1; 
+                    if (is_found) { 
+                        let is_foundIncoming = false; // признак найденной ранее даты вызова
+                        // скопируем содержимое найденного объекта historyUserFounded                        
+                        user = {...historyUserFounded};
+                        // переберем массив исходящих вызовов
+                        for (let i = 0; i < historyUserFounded.outgoing.length; i++) {
+                            const itemDateStr = new Date(historyUserFounded.outgoing[i].dateTime).toLocaleDateString(); // дата вызова ранее
+                            const currDateStr = currDate.toLocaleDateString(); // текущая дата вызова
+                            // сравним их, если равны                            
+                            if (itemDateStr === currDateStr) {
+                                user.callDateTimeQuantity.quantity = historyUserFounded.outgoing[i].quantity + 1; // увеличить счетчик вызовов в этот день
+                                is_foundIncoming = true;
+                                break;
+                            }                        
+                        }
+                        // если не нашли такой же даты в массиве исходящих вызовов outgoing равной текущей
+                        if (!is_foundIncoming) { 
+                            user.callDateTimeQuantity.quantity = 1;
+                            user.callDateTimeQuantity.dateTime = strDate; 
+                            user.outgoing.push(user.callDateTimeQuantity);
+                        }
+                    } else {
+                        // заполним данные о неизвестном пользователе (по-умолчанию)
+                        user.name = "Unknown";
+                        user.lastName = "Unknown";
+                        user.phoneNumber = number;
+                        user.dateOfBirth = "Unknown";
+                        user.callDateTimeQuantity = {};
+                        user.outgoing = [];
+                        user.callDateTimeQuantity.quantity = 1;
+                        user.callDateTimeQuantity.dateTime = strDate;
+                        user.outgoing.push(user.callDateTimeQuantity); 
+                    }  
+                    user.historyID = this.historyUsersCalls.length + 1;   
+
+                    // запишем сформированный объект user в список вызовов
                     this.historyUsersCalls.push(user);
+                    // добавим дополнительные поля для отображения в списке 
+                    this.historyUsersCalls = transformHistoryItems(this.historyUsersCalls);
+                    // отсортируем по дате                    
+                    sortArrayByCallDateTime(this.historyUsersCalls);                    
                 }               
             },
 
+            // перемещение элементов в секции history
             itemMoved(historyArray) {
                 this.historyUsersCalls = [...historyArray];
             }

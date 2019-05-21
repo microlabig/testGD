@@ -46,7 +46,7 @@ import contactDataInput from "../parts/contactDataInput";
 import { Validator } from 'simple-vue-validator';
 
 import { defaultURLPicture } from "../../helpers/urls";
-import { backTransformPhoneNumber } from '../../helpers/transform.js';
+import { backTransformPhoneNumber } from '../../helpers/transform';
 
 export default {  
     mixins: [require('simple-vue-validator').mixin],
@@ -64,7 +64,7 @@ export default {
       },
       'currentUserEdited.dateOfBirth'(value) {
         const patternDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/([0-9]{4})$/g; // mm/dd/yyyy
-        return Validator.value(value).required("The field must not be empty!").regex(patternDate,'Date format must be valid mm/dd/yyyy');
+        return Validator.value(value).required("The field must not be empty!").regex(patternDate,'Date format must be mm/dd/yyyy and valid!');
       }
     },
 
@@ -130,9 +130,7 @@ export default {
             this.currentUserEdited.lastName = value;
             break;
           case 2:  // phoneNumber   
-            this.userData[2] = backTransformPhoneNumber(value);
-            console.log(value);
-            
+            this.userData[2] = backTransformPhoneNumber(value);            
             this.currentUserEdited.phoneNumber = backTransformPhoneNumber(value);
             break;
           case 3:  // dateOfBirth  

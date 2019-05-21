@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import { transformPhoneNumber, backTransformPhoneNumber } from '../../helpers/transform.js'; 
+    import { transformPhoneNumber, backTransformPhoneNumber } from '../../helpers/transform'; 
 
     export default {
         props: {

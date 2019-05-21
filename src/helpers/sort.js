@@ -16,8 +16,8 @@ export const sortArrayByName = arr => {
 export const sortArrayByCallDateTime = arr => {
     if (arr.length>0) {
         arr.sort( (a,b) => { // сортируем список 
-            let nameA = Date.parse(a.callDateTimeQuantity.dateTime.toUpperCase()), 
-                nameB = Date.parse(b.callDateTimeQuantity.dateTime.toUpperCase());
+            let nameA = ""+Date.parse(a.callDateTimeQuantity.dateTime.toUpperCase()), 
+                nameB = ""+Date.parse(b.callDateTimeQuantity.dateTime.toUpperCase());
             if (nameA > nameB) // сортируем по возрастанию
                 return -1;
             if (nameA < nameB) 

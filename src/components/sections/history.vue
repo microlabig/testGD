@@ -10,7 +10,8 @@
           ).contacts__list
             li(
               v-for="user in historyArrayEdited"
-              :key="user.historyID"              
+              :key="user.historyID"
+              @click="$emit('historyItemClicked', user)"             
             ).contacts__item
               .contact__dropzone
               .contacts__row
@@ -38,7 +39,8 @@
 </template>
 
 <script>
-import { transformPhoneNumber } from '../../helpers/transform.js'; 
+import { transformPhoneNumber } from '../../helpers/transform'; 
+import { transformHistoryItems } from '../../helpers/historyItems'; 
 
 var parentUL = {}, // UL - родитель
     movedLI = {}, // перемещаемый объект li-шка
@@ -69,57 +71,8 @@ export default {
 
   computed: {
     // добавим поле historyID 
-    historyArrayEdited() {            
-      const MonthArrayStr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
-            currDateTime = new Date(); // текущая дата и время
-
-      this.historyArray.forEach( item => {   
-        // проверка на валидность dateTime
-        const checkDate = Date.parse(item.callDateTimeQuantity.dateTime);
-        if (isFinite(checkDate)) { 
-          // возъмем дату вызова контакта                  
-          const callDateTime = new Date(item.callDateTimeQuantity.dateTime);        
-          const callDateTimeStr = callDateTime.toLocaleDateString();
-          // и текущую дату
-          const localeDateStr = currDateTime.toLocaleDateString();
-          
-          // сравним обе даты
-          // если равны, то покажем слово "Today" и время звонка
-          // иначе - день, месяц, год звонка
-          if (localeDateStr === callDateTimeStr) {
-            let timeFormat = '', hoursStr = '', minutesStr = '';
-
-            if (callDateTime.getHours() >= 0 && callDateTime.getHours() <=11) 
-              timeFormat = 'AM';
-            else 
-              timeFormat = 'PM';
-            if (callDateTime.getHours() === 0) {
-              hoursStr = '0';
-              timeFormat = 'AM';
-            }
-            else {
-              if (callDateTime.getHours() >= 0 && callDateTime.getHours() <=11) {
-                hoursStr = callDateTime.getHours();
-                timeFormat = 'AM';
-              } else {
-                hoursStr = callDateTime.getHours() - 12;
-                timeFormat = 'PM';
-              }
-            }
-            minutesStr = callDateTime.getMinutes();            
-
-            item.firstValue = 'Today';
-            item.secondValue = 'at '+ hoursStr + ':' + minutesStr + timeFormat;           
-          } else {
-            const monthStr = callDateTime.getMonth();
-            item.firstValue = callDateTime.getDate() + ' of ' + MonthArrayStr[monthStr];
-            item.secondValue = ''+callDateTime.getFullYear(); // год
-          }
-          //console.log(dateStr.match(patternYYYYMMDD)[0]);
-        }
-        
-      });
-      return this.historyArray;
+    historyArrayEdited() { 
+      return transformHistoryItems(this.historyArray);
     }
   },
 
@@ -330,7 +283,12 @@ export default {
     // форматируем номер телефона
     formatingPhoneNumber(number) {
       return transformPhoneNumber(number);
-    }
+    },
+
+    /* // клик по li
+    itemClicked(event, user) {       
+      this.$emit('historyItemClicked', user);
+    } */
   }
 };
 </script>
