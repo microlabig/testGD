@@ -3,7 +3,6 @@
         .base-wrapper(
             v-if="showBaseWrapper"
         )
-            button(type="button" @click="clickButton")  2112e1
             navigation(
                 :showBaseContacts="showBaseContacts"
                 :showBaseHistory="showBaseHistory"
@@ -84,10 +83,10 @@
 
         async created() {    
             await this.fetchUsers();  // прочитаем из JSON список контактов и запишем его в стор
-            this.users = this.getUsers; // сохраним в users         
+            this.users = this.getUsers; // сохраним в users  
 
             // заполним массив историей всех вызовов
-           let historyID = 0;
+            let historyID = 0;
             this.users.forEach( item => {
                 if (item.outgoing) // если в контакте есть поле outgoing (исходящие вызовы)
                     if (item.outgoing.length > 0) { // и оно не пустое
@@ -106,9 +105,12 @@
         },
 
         computed: {
+            // добавим computed-свойство getUsers для быстрого доступа к users из стора
             ...mapGetters("users", ["getUsers"]),
 
+            //-----------------------------
             // поиск в списке пользователей
+            //-----------------------------
             usersSearching() { 
                 let tempUsers = [],
                     str = this.searchStr.toLowerCase(),
@@ -136,7 +138,9 @@
                 return tempUsers;
             },
 
+            //--------------------------------------------------
             // определение максимального индекса в массиве users
+            //--------------------------------------------------
             getMaxIdUsers() {
                 let max = 0;
                 if (this.users.length > 0)
@@ -146,22 +150,28 @@
         },
 
         methods: {
-            ...mapActions('users', ['fetchUsers', 'saveCurrentEditedUser', 'addNewUser']),
+            // добавим экшенов из стора
+            ...mapActions('users', ['fetchUsers', 'saveCurrentEditedUser', 'addNewUser', 'refreshUserData']),
 
-            clickButton() {
-                console.log(this.historyUsersCalls);
-            },
-
+            //-----------------------------------
+            // показать секцию с историей звонков
+            //-----------------------------------
             showHistory() {
                 this.showBaseContacts = false;
                 this.showBaseHistory = true;
             },
-
+            
+            //-------------------------------------
+            // показать секцию со списком контактов
+            //-------------------------------------
             showContacts() {
                 this.showBaseContacts = true;
                 this.showBaseHistory = false;
             },
-
+            
+            //----------------
+            // показать numpad
+            //----------------
             showPhone() {    
                 this.is_FromBaseWrapper = false;
                 this.phoneCurrentUser = "";
@@ -169,44 +179,58 @@
                 this.showPhoneWrapper = true;
             },
 
-            // нажата кнопка "Назад" в информации о пользователе
+            //-------------------------------------------------------------------------------------------------------
+            // нажата кнопка "Назад" в информации о пользователе - возвратиться на главный экран со списком контактов
+            //-------------------------------------------------------------------------------------------------------
             showBaseWrapperData(phoneNum) {
                 this.showPhoneWrapper = false;
                 this.showContactData = false;
                 this.showBaseWrapper = true;
             },
-
+            
+            //-----------------------------------
+            // показать информацию о пользователе
+            //-----------------------------------
             showContactInfo(usr) {
                 this.currentUser = usr;
                 this.showBaseWrapper = false;                
                 this.showContactData = true;                
             },
-
+            
+            //---------------------------------------------------------
+            // показать телефон и передать в него текщий номер телефона
+            //---------------------------------------------------------
             showContactPhone() {
                 this.phoneCurrentUser = this.currentUser.phoneNumber;
                 this.showContactData = false;
                 this.showPhoneWrapper = true;
             },
 
+            //---------------------------------------------------------------
             // открытие секции contactData для сохранения нового пользователя
+            //---------------------------------------------------------------
             saveNewUserData(number) { 
                 this.currentUser = {};               
                 this.currentUser.phoneNumber = number;
                 this.currentUser.id = this.getMaxIdUsers + 1;           
-
+                // покажем основной экран со списком пользователей
                 this.showPhoneWrapper = false;             
                 this.showContactData = true;                                 
             },
 
+            //-----------------------------------------------------------
             // сохранение нового пользователя или изменение существующего
+            //-----------------------------------------------------------
             saveUser(userEdited) {
                 let is_UserExistence = false;
 
+                // передадим необходимые поля в currentUser
                 this.currentUser = {
                     ...this.currentUser,
                     ...userEdited
                 };                
                 
+                // проверим, есть ли текущий контакт в списке
                 this.users = this.users.map(user => {
                     if (user.id === this.currentUser.id) {                        
                         is_UserExistence = true;
@@ -214,7 +238,8 @@
                     } else return user;
                 });
                 
-                if (!is_UserExistence) { // если пользователя нет в списке - создать нового пользователя
+                // если пользователя нет в списке - создать нового пользователя
+                if (!is_UserExistence) { 
                     this.currentUser.id = this.getMaxIdUsers + 1;
                     this.users.push(this.currentUser);
                     this.addNewUser(this.currentUser);
@@ -224,13 +249,17 @@
                 this.showBaseWrapperData();
                 //TODO: уведомление, что контакт сохранен
             },
-            
+
+            //------------------------------------------------------------------            
             // передача значения из input компонента searchComponent в searchStr
+            //------------------------------------------------------------------            
             searchStrInputed(str) {
                 this.searchStr = str;                               
             },
 
+            //----------------------------------
             // сохраним звонок в историю звонков
+            //----------------------------------
             saveCallInHistory(number, id) {
                 let is_ExistedUser = false, // признак существования пользователя с такими же id и number
                     user = {}, 
@@ -254,10 +283,7 @@
 
                 // сформируем текущую дату в наш общий формат для истории звонков
                 currDateStr = "" + currDate.getFullYear() + "-" + monthStr + "-" + dayStr + "T" +
-                              hoursStr + ":" + minutesStr + ":" + secondsStr;
-
-                            //console.log('fd=',currDateStr,'\n',monthStr,dayStr,new Date(currDateStr).toLocaleDateString());
-                            
+                              hoursStr + ":" + minutesStr + ":" + secondsStr;                            
                 
                 // поиск пользователя в списке 
                 for (let i = 0; i < this.users.length; i++) {                    
@@ -267,7 +293,6 @@
                     if (item.id === id && item.phoneNumber === number) { 
 
                         user = {...item}; 
-                        console.log(user.outgoing, item.outgoing);
                         if (!user.callDateTimeQuantity) user.callDateTimeQuantity = {}; // если не существует поля callDateTimeQuantity
                         user.callDateTimeQuantity.dateTime = currDateStr;     
 
@@ -308,12 +333,13 @@
                         // пометим, что пользователь существует
                         is_ExistedUser = true;
                         this.users[i].outgoing = user.outgoing;
-                        //TODO: поправить store тоже по id пользователя
+                        // поправим в store тоже информацию
+                        this.refreshUserData(this.users[i]);
                         break;                        
                     }
                 }
 
-                /* // если не существует пользователя 
+                // если не существует пользователя 
                 if (!is_ExistedUser) {                       
                     let is_found = false, // пользователь уже есть в истории вызовов
                         historyUserFounded = {}; // временная переменная для передачи данных пользователя
@@ -334,18 +360,21 @@
                     if (is_found) { 
                         let is_foundIncoming = false; // признак найденной ранее даты вызова
                         // скопируем содержимое найденного объекта historyUserFounded                        
-                        user = {...historyUserFounded};
-                        // переберем массив исходящих вызовов
-                        for (let i = 0; i < historyUserFounded.outgoing.length; i++) {
-                            const itemDateStr = new Date(historyUserFounded.outgoing[i].dateTime).toLocaleDateString(); // дата вызова ранее
+                        user = {...historyUserFounded};                        
+                        // переберем массив исходящих вызовов на поиск одинаковой даты
+                        for (let i = 0; i < historyUserFounded.outgoing.length; i++) {                                    
+                            const historyUserFoundedDate = new Date(historyUserFounded.outgoing[i].dateTime); // дата вызова ранее
+                            const historyUserFoundedDateStr = historyUserFoundedDate.toLocaleDateString(); 
                             const currDateStr = currDate.toLocaleDateString(); // текущая дата вызова
                             // сравним их, если равны                            
-                            if (itemDateStr === currDateStr) {
+                            if (historyUserFoundedDateStr === currDateStr) {                                        
                                 user.callDateTimeQuantity.quantity = historyUserFounded.outgoing[i].quantity + 1; // увеличить счетчик вызовов в этот день
+                                user.outgoing[i].quantity = user.callDateTimeQuantity.quantity;
                                 is_foundIncoming = true;
                                 break;
-                            }                        
-                        }
+                            }                                    
+                        } 
+                        
                         // если не нашли такой же даты в массиве исходящих вызовов outgoing равной текущей
                         if (!is_foundIncoming) { 
                             user.callDateTimeQuantity.quantity = 1;
@@ -365,18 +394,18 @@
                         user.outgoing.push(user.callDateTimeQuantity); 
                     }  
                     user.historyID = this.historyUsersCalls.length + 1;   
-                }          */      
+                }               
                 // запишем сформированный объект user в список вызовов
                 this.historyUsersCalls.push(user);
                 // добавим дополнительные поля для отображения в списке 
                 this.historyUsersCalls = transformHistoryItems(this.historyUsersCalls);
-                console.log(user);
-
                 // отсортируем по дате                    
                 sortArrayByCallDateTime(this.historyUsersCalls);
             },
 
+            //---------------------------------------
             // перемещение элементов в секции history
+            //---------------------------------------
             itemMoved(historyArray) {
                 this.historyUsersCalls = [...historyArray];
             }

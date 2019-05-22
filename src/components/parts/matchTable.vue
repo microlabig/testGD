@@ -30,7 +30,9 @@
         },
         
         methods: {
+            //---------------------------
             // форматируем номер телефона
+            //---------------------------
             formatingPhoneNumber(number) {
                 return transformPhoneNumber(number);
             }

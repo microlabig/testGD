@@ -41,6 +41,11 @@ const users = {
         // добавление нового пользователя
         addNewUser({commit}, newUser) {
             commit('ADD_USER', newUser);
+        },
+
+        // обновим информацию о пользователе
+        refreshUserData({commit}, user) {
+            commit('EDIT_USER', user);
         }
 
     },

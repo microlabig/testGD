@@ -13,7 +13,7 @@
 export default {
     data() { 
         return {
-            searchStr: ""
+            searchStr: "" // строка поиска необходимого контакта
         }
     }
 }

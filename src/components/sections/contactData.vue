@@ -29,7 +29,7 @@
                   v-model="val"
                   @input="customInput"
                 )
-                .form__input-error {{errorValidation}}
+                .form__input-error {{errorValidation[index]}}
             chartComponent
         controllPhone(
           @showPhone="$emit('showPhone')"
@@ -37,151 +37,154 @@
 </template>
 
 <script>
+  import formControll from "../parts/formControll";
+  import chartComponent from "../parts/chart";
+  import controllPhone from "../parts/controllPhone";
+  import contactDataInput from "../parts/contactDataInput";
 
-import formControll from "../parts/formControll";
-import chartComponent from "../parts/chart";
-import controllPhone from "../parts/controllPhone";
-import contactDataInput from "../parts/contactDataInput";
+  import { Validator } from 'simple-vue-validator';
 
-import { Validator } from 'simple-vue-validator';
+  import { defaultURLPicture } from "../../helpers/urls";
+  import { backTransformPhoneNumber } from '../../helpers/transform';
 
-import { defaultURLPicture } from "../../helpers/urls";
-import { backTransformPhoneNumber } from '../../helpers/transform';
+  export default {  
+      // добавим примесь validators (валидации данных)
+      mixins: [require('simple-vue-validator').mixin],
 
-export default {  
-    mixins: [require('simple-vue-validator').mixin],
-
-    validators: { // укажем какие объекты в data() мы хотим валидировать
-      'currentUserEdited.name'(value) {
-        return Validator.value(value).required("The field must not be empty!");
+      validators: { // укажем какие объекты в data() мы хотим валидировать
+        // имя пользователя
+        'currentUserEdited.name'(value) {
+          return Validator.value(value).required("The field must not be empty!");
+        },
+        // фамилия пользователя
+        'currentUserEdited.lastName'(value) {
+          return Validator.value(value).required("The field must not be empty!");
+        },
+        // номер телефона пользователя
+        'currentUserEdited.phoneNumber'(value) {
+          const patternPhoneNumber = /[(^\+\d*)]|[(^\d{1,4}$)]/g; 
+          return Validator.value(value).required("The field must not be empty!").regex(patternPhoneNumber,'Number format must be, eg. +1 \(234\) 567-89-01-..., 1234, ...');
+        },
+        // дата рождения пользователя
+        'currentUserEdited.dateOfBirth'(value) {
+          const patternDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/([0-9]{4})$/gi; // mm/dd/yyyy
+          return Validator.value(value).required("The field must not be empty!").regex(patternDate,'Date format must be mm/dd/yyyy and valid!');
+        }
       },
-      'currentUserEdited.lastName'(value) {
-        return Validator.value(value).required("The field must not be empty!");
+
+      components: {
+          formControll,
+          chartComponent,
+          controllPhone,
+          contactDataInput
       },
-      'currentUserEdited.phoneNumber'(value) {
-        //const patternLastSymbol = /[a-zA-Z]?$|[а-яА-Я]?$|\W?$/g; 
-        return Validator.value(value).required("The field must not be empty!");
+
+      props: {
+        currentUser: Object
       },
-      'currentUserEdited.dateOfBirth'(value) {
-        const patternDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/([0-9]{4})$/g; // mm/dd/yyyy
-        return Validator.value(value).required("The field must not be empty!").regex(patternDate,'Date format must be mm/dd/yyyy and valid!');
-      }
-    },
 
-    components: {
-        formControll,
-        chartComponent,
-        controllPhone,
-        contactDataInput
-    },
+      data() {
+        return {
+          userData: [ // хранит в себе данные о текущем редактируемом пользователе
+            this.currentUser.name, 
+            this.currentUser.lastName, 
+            this.currentUser.phoneNumber, 
+            this.currentUser.dateOfBirth
+          ],
 
-    props: {
-      currentUser: Object
-    },
+          inputPlaceholder: [ // содержимое placeholder-ов в input-ах
+            'First name', 'Last name', 'Phone number', 'Date of birth mm/dd/yyyy'
+          ],
+          ph: "", // placeholder
+          val: "", // значение из custom input
 
-    data() {
-      return {
-        userData: [
-          this.currentUser.name, 
-          this.currentUser.lastName, 
-          this.currentUser.phoneNumber, 
-          this.currentUser.dateOfBirth
-        ],
+          currentUserEdited: { // для сохранения измененных данных редактируемого пользователя пользователя 
+            id: this.currentUser.id,
+            name: this.currentUser.name || "", 
+            lastName: this.currentUser.lastName || "", 
+            phoneNumber: this.currentUser.phoneNumber || "", 
+            dateOfBirth: this.currentUser.dateOfBirth || ""
+          },
 
-        inputPlaceholder: [
-          'First name', 'Last name', 'Phone number', 'Date of birth mm/dd/yyyy'
-        ],
-        ph: "", // placeholder
-        val: "", // значение из custom input
+          errorValidation: [] // сообщение об ошибке валидации
+        }
+      },
 
-        currentUserEdited: { // для сохранения пользователя
-          id: this.currentUser.id,
-          name: this.currentUser.name || "", 
-          lastName: this.currentUser.lastName || "", 
-          phoneNumber: this.currentUser.phoneNumber || "", 
-          dateOfBirth: this.currentUser.dateOfBirth || ""
+      computed: {
+        //------------------------------------------
+        // возьмем все customInput'ы (для валидации)
+        //------------------------------------------
+        inputElemets() {
+          return this.$refs['inputElemets'];
+        }
+      },
+
+      created() {    
+        for (let i=0; i< this.userData.length; i++) this.errorValidation[i] = "";
+      },
+
+      methods: {    
+        //-------------------------------------------------------
+        // соотношение индекса и значения для каждого customInput
+        //-------------------------------------------------------        
+        customInput(value, index) {        
+          switch (index) {
+            case 0:  // name              
+              this.currentUserEdited.name = value;    
+              break;
+            case 1:  // lastName  
+              this.currentUserEdited.lastName = value;
+              break;
+            case 2:  // phoneNumber   
+              this.userData[2] = backTransformPhoneNumber(value);            
+              this.currentUserEdited.phoneNumber = backTransformPhoneNumber(value);
+              break;
+            case 3:  // dateOfBirth  
+              this.currentUserEdited.dateOfBirth = value;
+              break;
+          }   
+          if (this.inputElemets[index].classList.contains('is_not_validate'))
+            this.inputElemets[index].classList.remove('is_not_validate'); 
         },
 
-        errorValidation: "" // сообщение об ошибке валидации
-      }
-    },
+        //--------------------------------------
+        // ошибка загрузки аватарки пользователя
+        //--------------------------------------
+        errorLoadingImage(e) {        
+          e.target.src = defaultURLPicture;        
+        },
 
-    computed: {
-      // возьмем все customInput'ы (для валидации)
-      inputElemets() {
-        return this.$refs['inputElemets']
-      }
-    },
+        //-------------------------------
+        // соханить данные о пользователе
+        //-------------------------------
+        async saveUserData() {
+          const validationFieldsArr = ['currentUserEdited.name', 'currentUserEdited.lastName', 'currentUserEdited.phoneNumber', 'currentUserEdited.dateOfBirth']; // проверяемые поля
+          let arr = []; // массив ошибок
+          // "обнулим" весь массив ошибок
+          for (let i=0; i< validationFieldsArr.length; i++) arr[i] = "";
 
-    methods: {     
-      /* 
-      // форматируем номер телефона
-      formatingPhoneNumber(number) {
-          return transformPhoneNumber(number);
-      }, */
-        
-      // соотношение индекса и значения для каждого customInput
-      customInput(value, index) {        
-        switch (index) {
-          case 0:  // name              
-            this.currentUserEdited.name = value;    
-            break;
-          case 1:  // lastName  
-            this.currentUserEdited.lastName = value;
-            break;
-          case 2:  // phoneNumber   
-            this.userData[2] = backTransformPhoneNumber(value);            
-            this.currentUserEdited.phoneNumber = backTransformPhoneNumber(value);
-            break;
-          case 3:  // dateOfBirth  
-            this.currentUserEdited.dateOfBirth = value;
-            break;
-        }   
-        if (this.inputElemets[index].classList.contains('is_not_validate'))
-          this.inputElemets[index].classList.remove('is_not_validate'); 
-      },
-
-      errorLoadingImage(e) {        
-        e.target.src = defaultURLPicture;        
-      },
-
-      async saveUserData() {
-        let is_ValidateFields = false;
-
-        // разрешим добавление ошибки валидации только после того, как валидация пройдет
-        await this.$validate().then( success => { 
-          if (!success) { // в случае если не прошли валидацию
-            // проверим валидацию по полю name
-            if ( this.validation.firstError('currentUserEdited.name') ) {
-              this.inputElemets[0].classList.add('is_not_validate');
-              this.errorValidation = this.validation.firstError('currentUserEdited.name');
+          // разрешим добавление ошибки валидации только после того, как валидация пройдет
+          await this.$validate().then( success => { 
+            if (!success) { // в случае если не прошли валидацию
+              // проверим валидацию по всем полям
+              for (let i=0; i < validationFieldsArr.length; i++) {
+                if ( this.validation.hasError(validationFieldsArr[i]) ) {
+                  // навесим класс ошибки на input[i]
+                  this.inputElemets[i].classList.add('is_not_validate');
+                  // запишем ошибку в массив ошибок
+                  arr[i] = this.validation.firstError(validationFieldsArr[i]);
+                }
+              }
+              return;              
             }
-            // проверим валидацию по полю lastName
-            if ( this.validation.firstError('currentUserEdited.lastName') ) {
-              this.inputElemets[1].classList.add('is_not_validate');
-              this.errorValidation = this.validation.firstError('currentUserEdited.lastName');
-            }
-            // проверим валидацию по полю phoneNumber
-            if ( this.validation.firstError('currentUserEdited.phoneNumber') ) {
-              this.inputElemets[2].classList.add('is_not_validate');
-              this.errorValidation = this.validation.firstError('currentUserEdited.phoneNumber');
-            }     
-            // проверим валидацию по полю dateOfBirth
-            if ( this.validation.firstError('currentUserEdited.dateOfBirth') ) {
-              this.inputElemets[3].classList.add('is_not_validate');
-              this.errorValidation = this.validation.firstError('currentUserEdited.dateOfBirth');
-            }     
-            return;              
-          }
-          is_ValidateFields = true;
-          this.validation.reset();
-        });
-          
-        if (!is_ValidateFields) return;
-        
-        this.$emit('saveCurrentUser', this.currentUserEdited);
+            this.validation.reset();            
+            this.$emit('saveCurrentUser', this.currentUserEdited); 
+          });
+          setTimeout(() => {
+            this.errorValidation = [...arr];            
+          }, 50); // для обновления информации об ошибках
+        }
       }
-    }
-}
+  }
 
 </script>

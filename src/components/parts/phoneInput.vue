@@ -27,32 +27,37 @@ export default {
         phoneNumber: String,
         inputIsEmpty: Boolean
     },
+
     data() {
         return {
             is_Digit: false
         }
     },
+
     computed: {
         phoneNumberFormated() {            
             return transformPhoneNumber(this.phoneNumber);
         }
     },
+
     methods: {
+        //------------------------------
         // введено значение в поле ввода
+        //------------------------------
         letterInputed() {
             let val = event.target.value;
-
             // проверим если в поле phoneNumber введена не цифра 
             if (!this.is_Digit) {
                 val = transformPhoneNumber(backTransformPhoneNumber(this.phoneNumber));
                 event.target.value = val;                
                 return;
             }
-
             this.$emit('input', val);
         },
-
+        
+        //---------------------------------------
         // определение кода нажатия клавиш клавиш
+        //---------------------------------------
         inputKeyDown(event) {            
             let e = event;      
 
