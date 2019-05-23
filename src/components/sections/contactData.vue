@@ -30,7 +30,9 @@
                   @input="customInput"
                 )
                 .form__input-error {{errorValidation[index]}}
-            chartComponent
+            chartComponent(
+              :outgoingCalls="currentUser.outgoing"
+            )
         controllPhone(
           @showPhone="$emit('showPhone')"
         )

@@ -68,7 +68,7 @@
                 phoneNumber: "", // строка с вводимым номером телефона
                 is_calling: false, // произведен звонок
                 is_ValidPhone: false, 
-                callTime: 1000, // время вызова
+                callTime: 5000, // время вызова
                 contacts: "", // список всех контактов
                 contactsId: -1 // ID текущего контакта
             }

@@ -12,15 +12,30 @@ export const sortArrayByName = arr => {
     }
 };
 
-// сортировка по дате звонков (сначала свежие звонки)
+// сортировка по дате звонков (сначала свежие звонки) - по полю callDateTimeQuantity
 export const sortArrayByCallDateTime = arr => {
     if (arr.length>0) {
         arr.sort( (a,b) => { // сортируем список 
-            let nameA = ""+Date.parse(a.callDateTimeQuantity.dateTime.toUpperCase()), 
-                nameB = ""+Date.parse(b.callDateTimeQuantity.dateTime.toUpperCase());
+            let nameA = Date.parse(a.callDateTimeQuantity.dateTime.toUpperCase()), 
+                nameB = Date.parse(b.callDateTimeQuantity.dateTime.toUpperCase());
             if (nameA > nameB) // сортируем по возрастанию
                 return -1;
             if (nameA < nameB) 
+                return 1;  
+            return 0; // никакой сортировки
+        });
+    }
+};
+
+// сортировка по дате звонков (сначала старые звонки) - по полю outgoing
+export const sortArrayByCallAllDateTime = arr => {
+    if (arr.length>0) {
+        arr.sort( (a,b) => { // сортируем список 
+            let nameA = Date.parse(a.dateTime.toUpperCase()), 
+                nameB = Date.parse(b.dateTime.toUpperCase());                
+            if (nameA < nameB) // сортируем по возрастанию
+                return -1;
+            if (nameA > nameB) 
                 return 1;  
             return 0; // никакой сортировки
         });
