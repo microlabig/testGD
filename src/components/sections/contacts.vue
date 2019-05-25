@@ -45,13 +45,17 @@
     },
 
     methods: {
+      // ---------------------------------
       // в случае ошибки загрузки аватарки
+      // ---------------------------------
       errorLoadingImage(e,user) { 
         e.target.src = defaultURLPicture;
         user.userpic = e.target.src;
       },
 
+      // --------------------------
       // форматируем номер телефона
+      // --------------------------
       formatingPhoneNumber(number) {
         return transformPhoneNumber(number);
       }

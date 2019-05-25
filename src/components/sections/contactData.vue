@@ -32,6 +32,7 @@
                 .form__input-error {{errorValidation[index]}}
             chartComponent(
               :outgoingCalls="currentUser.outgoing"
+              :style="{height: heightSVGChart}"
             )
         controllPhone(
           @showPhone="$emit('showPhone')"
@@ -108,6 +109,8 @@
             dateOfBirth: this.currentUser.dateOfBirth || ""
           },
 
+          heightSVGChart: "",
+
           errorValidation: [] // сообщение об ошибке валидации
         }
       },
@@ -123,6 +126,12 @@
 
       created() {    
         for (let i=0; i< this.userData.length; i++) this.errorValidation[i] = "";
+      },
+
+      mounted() {        
+        // вычислим высоту svg-графика звонков
+        this.heightSVGChart = self.document.querySelector(".controll--phone").getBoundingClientRect().top - self.document.querySelector(".chart").getBoundingClientRect().top - 10 + "px";        
+        if (this.heightSVGChart === "") this.heightSVGChart = "235px";
       },
 
       methods: {    
