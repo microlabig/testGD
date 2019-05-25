@@ -3,10 +3,7 @@
       .container   
         .contacts__table.contacts__table--history
           ul(
-            @dragenter="dragEnter"
-            @dragleave="dragLeave"
             @dragover="dragOver"
-            @drop="drop"
           ).contacts__list
             li(
               v-for="user in historyArrayEdited"
@@ -85,32 +82,108 @@ export default {
   },
 
   methods: {
-    dragStart() {
-      console.log("dragStart");
-    },
-    dragEnd() {
-      console.log("dragEnd");
+    /*-------------------------------------------------
+      старт перемещения элемента (Drag and Drop Event)
+    -------------------------------------------------*/
+    dragStart(e) {
+      this.touchStart(e);
     },
 
-    dragEnter() {
-      console.log("dragEnter");
+    /*--------------------------------------------------------------------------------------
+      пользователь прекратил перемещение элемента, переместим элемент (Drag and Drop Event)
+    --------------------------------------------------------------------------------------*/
+    dragEnd(e) {
+     this.touchEnd(e);
     },
-    dragLeave() {
-      console.log("dragLeave");
-    },
-    dragOver() {
-      console.log("dragOver");
-    },
-    drop() {
-      console.log("drop");
+
+    /*----------------------------------------------------------------
+      перемещение элемента и поиск для него нового места (TouchEvent)
+    ----------------------------------------------------------------*/
+    dragOver(e) {
+      let x = 0, y = 0, c = 0, // с - счетчик поиска родительских элементов
+          is_found = false, // признак наличия найденного элемента li - currLI - под координатами (x,y) в массиве найденных li-шек (checkedLIs)
+          ev = e;
+
+        positionY = ev.pageY + moveOffsetY; // вычислим смещение во время перемещения объекта LI        
+        movedLI.style.top = positionY + "px"; // переместим объект LI (movedLI)
+        
+        if (is_Time) { // запустим алгоритм поиска элементов над которыми перемещается movedLI
+          is_Time = false;
+
+          // определим элемент под перемещающимся объектом (определение происходит не постоянно, каждые timerTouchInterval мс)
+          timerTouch = setTimeout( ()=> {
+            // определим необходимые координаты (x,y)
+            x = positionX;
+            y = movedLI.getBoundingClientRect().top + movedLI.getBoundingClientRect().height / 2; // середина li по Оу
+
+            // скроем перемещаемый элемент movedLI для определения елемента под координатами (x,y)
+            movedLI.classList.add('displaynone'); 
+            // определим элемент под координатами (x,y) 
+            elem = document.elementFromPoint(x, y);  
+            // покажем перемещаемый элемент movedLI (чтоб не возникало дергания)          
+            if (movedLI.classList.contains('displaynone')) movedLI.classList.remove('displaynone'); 
+
+            //далее, определим li-шку для найденного elem
+            if (elem) { // если не null
+
+              // возьмем родителя для найденного выше elem 
+              currLI = elem.parentElement;         
+
+              if (currLI) { // если не null (т.к. может быть за границей UL, напр., на body, html)
+
+                // найдем li с классом .contacts__item для определенного выше elem
+                while (currLI!==null && !currLI.classList.contains("contacts__item") && c<10) { // 10 - максимальное число поисков LI.contacts__item (макс 5)
+                  currLI = currLI.parentElement;
+                  c++;
+                }
+                          
+                if (currLI!==null && c < 9 && currLI.classList.contains("contacts__item")) {  // если нашли родителя LI.contacts__item               
+                  
+                  if (lastLI!==null && movedLI.getBoundingClientRect().top > lastLI.getBoundingClientRect().top) { // если перемещаемая li ниже всего списка                                     
+                    placeUnderUL = true;
+                    if (currLI.classList.contains("is_found")) currLI.classList.remove("is_found");
+                    lastLI.classList.add("is_found--under");                    
+                  }
+                  else {                    
+                    placeUnderUL = false;
+                    if (lastLI.classList.contains("is_found--under")) lastLI.classList.remove("is_found--under");
+                    currLI.classList.add("is_found");  // покажем дочерний элемент .contact__dropzone для индикации нового места в списке                     
+                  }                  
+
+                  if (checkedLIs.length === 0) checkedLIs.push(currLI); // добавим currLI в массив всех пройденных элементов LI - checkedLIs при условии, что в checkedLIs нет элементов
+                  else { 
+                    // иначе проверим, если currLI нет в списке checkedLIs, то поместим его (currLI) в этот массив (checkedLIs)
+                    is_found = false;
+                    for (let i=0; i<checkedLIs.length; i++) {
+                      if (checkedLIs[i] === currLI) {
+                        is_found = true;
+                        break;
+                      }
+                    }   
+                    if (!is_found) checkedLIs.push(currLI);
+                  }                  
+
+                  // пройдемся по checkedLIs для удаления класса индикации "посадочного" места
+                  checkedLIs.forEach( li => {
+                    if (li !== currLI) 
+                      if (li.classList.contains("is_found")) li.classList.remove("is_found");
+                  });                  
+                } 
+              }
+            }
+            is_Time = true; // разрешим поиск элементов под координатами (x,y)
+          }, timerTouchInterval);                    
+        }       
     },
 
     /*-----------------------------------------
       старт перемещения элемента (TouchEvent)
     -----------------------------------------*/
     touchStart(e) {
-      let touch = e.targetTouches; // закешируем массив текущих нажатий
-      if (touch.length === 1) { // если всего одно нажатие
+      let type = e.type,
+          touch = (type === 'touchstart') ? e.targetTouches : e; // закешируем массив текущих нажатий
+      
+      if (touch.length === 1 || type !== 'touchstart') { // если всего одно нажатие
 
         let target = e.target; // закешируем нажатие
 
@@ -136,7 +209,8 @@ export default {
         if (parentUL.children.length>1 && movedLI === lastLI) lastLI = parentUL.children[parentUL.children.length - 2];
 
         // вычислим смещение по Y
-        moveOffsetY = movedLI.offsetTop - touch[0].pageY;        
+        if (type === 'touchstart') moveOffsetY = movedLI.offsetTop - touch[0].pageY; 
+        else moveOffsetY = movedLI.offsetTop - e.pageY;        
         positionX = movedLI.getBoundingClientRect().left + 150;  // 150 - для того, чтобы точно указывать на список контактов (это делается для определения элемента под передвигаемой li-шке)                       
 
         // сделаем li-шке position: absolute (для перемещения)
@@ -151,13 +225,13 @@ export default {
       перемещение элемента и поиск для него нового места (TouchEvent)
     ----------------------------------------------------------------*/
     touchMove(e) {
-      let x = 0, y = 0, c = 0; // с - счетчик поиска родительских элементов
-      let is_found = false; // признак наличия найденного элемента li - currLI - под координатами (x,y) в массиве найденных li-шек (checkedLIs)
-      
-      let touch = e.targetTouches;
+      let x = 0, y = 0, c = 0, // с - счетчик поиска родительских элементов
+          is_found = false, // признак наличия найденного элемента li - currLI - под координатами (x,y) в массиве найденных li-шек (checkedLIs)
+                
+          touch = e.targetTouches; // закешируем массив текущих нажатий
 
-      if (touch.length === 1) {
-        positionY = touch[0].pageY + moveOffsetY; // вычислим смещение во время перемещения объекта LI
+      if (touch.length === 1) { // если всего одно нажатие
+        positionY = touch[0].pageY + moveOffsetY; // вычислим смещение во время перемещения объекта LI        
         movedLI.style.top = positionY + "px"; // переместим объект LI (movedLI)
         
         if (is_Time) { // запустим алгоритм поиска элементов над которыми перемещается movedLI
@@ -287,12 +361,7 @@ export default {
     // форматируем номер телефона
     formatingPhoneNumber(number) {
       return transformPhoneNumber(number);
-    },
-
-    /* // клик по li
-    itemClicked(event, user) {       
-      this.$emit('historyItemClicked', user);
-    } */
+    }
   }
 };
 </script>
