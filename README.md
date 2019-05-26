@@ -89,3 +89,11 @@ yarn build
         ...
 ...
 ```
+
+## Основной используемый стек
+* Webpack
+* PostCSS + normalize.css
+* PUG
+* Vue + Vuex + Simple Vue Validator
+* Yarn, npm
+
