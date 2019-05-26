@@ -1,8 +1,11 @@
 # Тестовое задание от Grid Dynamics (by Igor Bezmestin)
 
 Резюме - [http://igorbezmestin.ru](http://igorbezmestin.ru)
+
 Почта - [igor-rock@list.ru](mailto://igor-rock@list.ru), [igorbezmestin@gmail.com](mailto://igorbezmestin@gmail.com)
+
 VK - [vk.com/igorbezmestin](https://vk.com/igorbezmestin)
+
 Телеграмм - [@BezmestinIY](https://t.me/BezmestinIY)
 
 ---
