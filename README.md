@@ -70,21 +70,21 @@ yarn build
 └── webpack.conf.js               # Конфигурация Webpack.js
 
 ```
-## Структура данных в файле users.json
+## Структура данных о контакте в файле users.json
 
-```json
+```
 ...
 {
-    "id": 3,                                  # Конфигурация Webpack.js
-    "name": "John",
-    "lastName": "Doe",
-    "phoneNumber": "+79485164385",
-    "dateOfBirth": "10/30/1991",
-    "userpic": "URL контакта",
-    "outgoing": [
+    "id": 3,                                  # ID контакта
+    "name": "John",                           # Имя контакта
+    "lastName": "Doe",                        # Фамилия контакта
+    "phoneNumber": "+79485164385",            # Телефонный номер контакта
+    "dateOfBirth": "10/30/1991",              # Дата рожения контакта
+    "userpic": "URL контакта",                # URL аватарки контакта
+    "outgoing": [                             # Массив исходящий звонков
         {
-            "quantity": "105",
-            "dateTime": "2010-04-16T10:50:50"
+            "quantity": "105",                # Количество исходящих звонков
+            "dateTime": "2010-04-16T10:50:50" # Дата исходящих звонков (YYYY-MM-DDTHH:MM:SS)
         },
         ...
 ...
