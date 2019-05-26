@@ -1,5 +1,12 @@
 # Тестовое задание от Grid Dynamics (by Igor Bezmestin)
 
+Резюме - [http://igorbezmestin.ru](http://igorbezmestin.ru)
+Почта - [igor-rock@list.ru](mailto://igor-rock@list.ru), [igorbezmestin@gmail.com](mailto://igorbezmestin@gmail.com)
+VK - [vk.com/igorbezmestin](https://vk.com/igorbezmestin)
+Телеграмм - [@BezmestinIY](https://t.me/BezmestinIY)
+
+---
+
 ## Запуск проекта
 
 При помощи npm:
@@ -29,7 +36,7 @@ yarn dev
 yarn build
 
 ```
-Для просмотра итогового проекта перейдите по ссылке [http://testGD.igorbezmestin.ru](http://testGD.igorbezmestin.ru).
+Для просмотра итогового проекта перейдите по ссылке [http://testGD.igorbezmestin.ru](http://testGD.igorbezmestin.ru)
 
 ## Структура папок и файлов
 
@@ -91,9 +98,9 @@ yarn build
 ```
 
 ## Основной используемый стек
+
 * Webpack
 * PostCSS + normalize.css
 * PUG
 * Vue + Vuex + Simple Vue Validator
 * Yarn, npm
-
