@@ -70,3 +70,22 @@ yarn build
 └── webpack.conf.js               # Конфигурация Webpack.js
 
 ```
+## Структура данных в файле users.json
+
+```json
+...
+{
+    "id": 3,                                  # Конфигурация Webpack.js
+    "name": "John",
+    "lastName": "Doe",
+    "phoneNumber": "+79485164385",
+    "dateOfBirth": "10/30/1991",
+    "userpic": "URL контакта",
+    "outgoing": [
+        {
+            "quantity": "105",
+            "dateTime": "2010-04-16T10:50:50"
+        },
+        ...
+...
+```
