@@ -1,12 +1,11 @@
-import { isNumber } from "util";
-
 const patternMultyplyOrHash = /[\*\#]/g;
 
+// ----------------------------------------------------------------
 // преобразование номера вида "+ABCDEFGHJIK" в "+A (BCD) EFG-HJ-IK"
+// ----------------------------------------------------------------
 export const transformPhoneNumber = (number) => {
     let str = number;
 
-//    if (number[0] === "+") str = number.substr(1,number.length-1);
     if (str.match(patternMultyplyOrHash) === null) {
         if (number.length > 4) {
             
@@ -37,7 +36,9 @@ export const transformPhoneNumber = (number) => {
     return str;
 };
 
+// -------------------------------------------------------------------------
 // обратное преобразование номера вида "+A (BCD) EFG-HJ-IK" в "+ABCDEFGHJIK"
+// -------------------------------------------------------------------------
 export const backTransformPhoneNumber = (number) => {
     let str = number;            
     
@@ -55,31 +56,3 @@ export const backTransformPhoneNumber = (number) => {
     return str;
 }
 
-
-
-
-// export const backTransformPhoneNumber = (number) => {
-//     const pattern = /^\+?\d|\d/gi;
-//     let str = number;
-//     //const pattern = /[\+\d]/gim;
-//     //const pattern = /[\d]/gim;    
-    
-
-//     if (number.length > 9)         
-//         str = number.match(pattern).join('');
-//     console.log(number.length, number, str);
-    
-//     if (number.length > 9) 
-//         return number.match(pattern).join('');
-//     else {
-//          if (number[0] === "+")
-//             return number.substr(1,number.length-1); 
-//         console.log(number.length);
-        
-//         if (number[0] === "+")
-//             return number.substr(1,number.length-1);
-//         else 
-//             return number; 
-//     return str; 
-    
-// };

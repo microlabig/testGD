@@ -415,8 +415,12 @@
 </script>
 
 <style lang="postcss">
-    .app-wrapper,
+    .app-wrapper {
+        height: 100%;
+    }
     .base-wrapper {
+        display: flex;
+        flex-direction: column;
         height: 100%;
     }
 </style>

@@ -56,7 +56,7 @@ var parentUL = {}, // UL - родитель
     moveOffsetY = 0, // смещение по У перемещаемого элемента
     positionY = 0,
     positionX = 0,
-    timerTouch = null, // таймер для отслеживания поиска элементов в touchmove (1 раз в timerTouchInterval мс) - для оптимизации!
+    timerMoved = null, // таймер для отслеживания поиска элементов в touchmove (1 раз в timerTouchInterval мс) - для оптимизации!
     timerTouchInterval = 100; // интервал таймера 
 
 export default {
@@ -99,22 +99,23 @@ export default {
     /*----------------------------------------------------------------
       перемещение элемента и поиск для него нового места (TouchEvent)
     ----------------------------------------------------------------*/
-    dragOver(e) {
+    dragOver(e) {            
       let x = 0, y = 0, c = 0, // с - счетчик поиска родительских элементов
           is_found = false, // признак наличия найденного элемента li - currLI - под координатами (x,y) в массиве найденных li-шек (checkedLIs)
           ev = e;
 
-        positionY = ev.pageY + moveOffsetY; // вычислим смещение во время перемещения объекта LI        
+        positionY = ev.pageY + moveOffsetY; // вычислим смещение во время перемещения объекта LI                
         movedLI.style.top = positionY + "px"; // переместим объект LI (movedLI)
         
         if (is_Time) { // запустим алгоритм поиска элементов над которыми перемещается movedLI
           is_Time = false;
 
           // определим элемент под перемещающимся объектом (определение происходит не постоянно, каждые timerTouchInterval мс)
-          timerTouch = setTimeout( ()=> {
+          timerMoved = setTimeout( ()=> {
             // определим необходимые координаты (x,y)
             x = positionX;
             y = movedLI.getBoundingClientRect().top + movedLI.getBoundingClientRect().height / 2; // середина li по Оу
+
 
             // скроем перемещаемый элемент movedLI для определения елемента под координатами (x,y)
             movedLI.classList.add('displaynone'); 
@@ -238,7 +239,7 @@ export default {
           is_Time = false;
 
           // определим элемент под перемещающимся объектом (определение происходит не постоянно, каждые timerTouchInterval мс)
-          timerTouch = setTimeout( ()=> {
+          timerMoved = setTimeout( ()=> {
             // определим необходимые координаты (x,y)
             x = positionX;
             y = movedLI.getBoundingClientRect().top + movedLI.getBoundingClientRect().height / 2; // середина li по Оу
@@ -311,7 +312,7 @@ export default {
       let i = 0;
 
       // отменим действия таймера, если он был запущен в touchmove
-      clearTimeout(timerTouch); 
+      clearTimeout(timerMoved); 
 
       // определим номер currLI в общем списке всех LI
       for (i = 0; i < parentUL.children.length; i++) {

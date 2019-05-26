@@ -1,13 +1,13 @@
+// ф-ия преобразования даты звонков в массиве историй звонков
 export const transformHistoryItems = arr => {
-    //if (arr.length === 0) return;
     arr.forEach( item => {   
         if (item.outgoing) { // если существует поле outgoing
           if (item.outgoing.length > 0) { // и оно не нулевое
             const MonthArrayStr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
                   currDateTime = new Date(); // текущая дата и время 
-            // проверка на валидность dateTime
-            //console.log(item, item.callDateTimeQuantity, item.name);            
-            const checkDate = Date.parse(item.callDateTimeQuantity.dateTime);                        
+            // проверка на валидность dateTime          
+            const checkDate = Date.parse(item.callDateTimeQuantity.dateTime);      
+
             if (isFinite(checkDate)) { 
               // возъмем дату вызова контакта                  
               const callDateTime = new Date(item.callDateTimeQuantity.dateTime);        
