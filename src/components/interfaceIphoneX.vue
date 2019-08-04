@@ -114,10 +114,24 @@
             usersSearching() { 
                 let tempUsers = [],
                     str = this.searchStr.toLowerCase(),
-                    usersStr = '';                    
+                    nameStr = '', phoneNumberStr = '';
+                    //usersStr = '';                    
                 // отсортируем по имени
                 sortArrayByName(this.users); 
                 // найдем совпадения
+                for (let i = 0; i < this.users.length; i++) {
+                    nameStr = this.users[i].name.toLowerCase() + ' ' + this.users[i].lastName.toLowerCase(); // по фамилии
+                    if (nameStr.indexOf(str) !== -1) {
+                        tempUsers.push(this.users[i]);
+                        continue;
+                    }
+                    phoneNumberStr = this.users[i].phoneNumber.toLowerCase(); // по номеру телефона
+                    if (phoneNumberStr.indexOf(str) !== -1) {
+                        tempUsers.push(this.users[i]);
+                        continue;
+                    }
+                }     
+                /* 
                 for (let i = 0; i < this.users.length; i++) {
                     usersStr = this.users[i].name.toLowerCase(); // по имени
                     if (usersStr.indexOf(str) !== -1) {
@@ -134,7 +148,8 @@
                         tempUsers.push(this.users[i]);
                         continue;
                     }
-                }                  
+                }      
+                */             
                 return tempUsers;
             },
 
